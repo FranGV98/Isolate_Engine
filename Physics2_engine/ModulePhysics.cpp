@@ -5,12 +5,12 @@
 #include "ModulePhysics.h"
 #include "math.h"
 
-#include "Box2D/Box2D/Box2D.h"
+#include "Dependencies/Box2D/Box2D/Box2D.h"
 
 #ifdef _DEBUG
-#pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
+#pragma comment( lib, "Dependencies/Box2D/libx86/Debug/Box2D.lib" )
 #else
-#pragma comment( lib, "Box2D/libx86/Release/Box2D.lib" )
+#pragma comment( lib, "Dependencies/Box2D/libx86/Release/Box2D.lib" )
 #endif
 
 ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app, start_enabled)
