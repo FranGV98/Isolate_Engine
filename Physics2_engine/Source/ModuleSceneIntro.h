@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Module.h"
-#include "p2DynArray.h"
 #include "Globals.h"
 
 class Primitive;
@@ -22,5 +21,5 @@ private:
 	void HandleDebugInput();
 	void DebugSpawnPrimitive(Primitive* p);
 
-	p2DynArray<Primitive*> primitives;
+	std::vector<Primitive*> primitives;
 };

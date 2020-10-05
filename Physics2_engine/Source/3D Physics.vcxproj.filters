@@ -45,15 +45,6 @@
     <ClInclude Include="ModuleWindow.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="p2DynArray.h">
-      <Filter>Source\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="p2List.h">
-      <Filter>Source\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="p2Point.h">
-      <Filter>Source\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="glmath.h">
       <Filter>Source\Containers</Filter>
     </ClInclude>

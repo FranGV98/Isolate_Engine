@@ -33,16 +33,14 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 
 Application::~Application()
 {
-	p2List_item<Module*>* item = list_modules.getLast();
+	std::vector<Module*>::iterator item = modulelist.begin();
 	
-	while(item != NULL)
+	while (item != modulelist.end())
 	{
-		delete item->data;
-		item = item->prev;
+		delete (*item);
+		item++;
 	}
 }
-
-bool AFunction(int a, int b) { return true; }
 
 bool Application::Init()
 {
@@ -51,62 +49,21 @@ bool Application::Init()
 	App = this;
 
 	// Call Init() in all modules
-	p2List_item<Module*>* item = list_modules.getFirst();
+	std::vector<Module*>::iterator item = modulelist.begin();
 
-	while(item != NULL && ret == true)
+	while(item != modulelist.end() && ret == true)
 	{
-		ret = item->data->Init();
-		item = item->next;
+		ret = (*item)->Init();
+		item++;
 	}
 	
-	//for (Module* it : modules)
-	//{
-	//	it->Init();
-	//}
-
-	//std::for_each(modules.begin(), modules.end(),			//for_each() method. Inits all modules from begin to end.
-	//	[](Module* m) 
-	//{
-	//	m->Init();
-	//});
-
-	////Lambda [](){}
-	////[](Module* m) {ANumber += 1; m->Init(); };			//[this/&...]
-	//[this](Module* m) {this->CleanUp(); m->Init(); };		//[this/&...] what it is capturing (variables that it will store), () Arguments of the function, {} Function method.
-	//
-	//std::vector<Module*>::iterator it = modules.begin();	//Iterator call
-	//modules.rbegin;											//Last element.
-	//modules.begin;											//First element.
-	//
-	//auto ANumber = 1u;										//Auto is set to unsigned integer.
-	//auto BNumber = 1.f;										//Auto is set to float.
-	//auto CNumber = 1.0;										//Auto is set to double.
-	//
-	//while(it != modules.end() && ret == true)				//Iterating the modules in a vector.
-	//{
-	//	(*it)->Init();										//
-	//	it++;												//Iterator->next
-	//}
-
-	//std::function<bool(int, int)> FunctionPtr = AFunction;				//<function type/what it returns (arguments)> Name
-	//FunctionPtr(1, 2);													//Accesses AFunction.
-
-	//std::function<update_status()> UpdatePtr = [this]() { return this->Update(); }; //Set as the pointer to the Update() function of Application.
-
-
-	//std::shared_ptr<Module> ModulePtr = std::make_shared<Module>();		//A share_pointer automatically deletes and keeps an object alive. Module will have a counter of how many shared_pointer points to it.
-	//std::weak_ptr<Module> WeakPtr = ModulePtr;							//Weak pointer allows to create a pointer towards an object that can be destroyed while this smart pointer points to it.
-
-	//ModulePtr2 = ModulePtr;												//Second smart_pointer.
-
-	// After all Init calls we call Start() in all modules
 	LOG("Application Start --------------");
-	item = list_modules.getFirst();
+	item = modulelist.begin();
 
-	while(item != NULL && ret == true)
+	while(item != modulelist.end() && ret == true)
 	{
-		ret = item->data->Start();
-		item = item->next;
+		ret = (*item)->Start();
+		item++;
 	}
 	
 	ms_timer.Start();
@@ -114,6 +71,7 @@ bool Application::Init()
 }
 
 // ---------------------------------------------
+
 void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.Read() / 1000.0f;
@@ -131,28 +89,28 @@ update_status Application::Update()
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 	
-	p2List_item<Module*>* item = list_modules.getFirst();
+	std::vector<Module*>::iterator item = modulelist.begin();
 	
-	while(item != NULL && ret == UPDATE_CONTINUE)
+	while(item != modulelist.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = item->data->PreUpdate(dt);
-		item = item->next;
+		ret = (*item)->PreUpdate(dt);
+		item++;
 	}
 
-	item = list_modules.getFirst();
+	item = modulelist.begin();
 
-	while(item != NULL && ret == UPDATE_CONTINUE)
+	while(item != modulelist.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = item->data->Update(dt);
-		item = item->next;
+		ret = (*item)->Update(dt);
+		item++;
 	}
 
-	item = list_modules.getFirst();
+	item = modulelist.begin();
 
-	while(item != NULL && ret == UPDATE_CONTINUE)
+	while(item != modulelist.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = item->data->PostUpdate(dt);
-		item = item->next;
+		ret = (*item)->PostUpdate(dt);
+		item++;
 	}
 
 	FinishUpdate();
@@ -162,20 +120,19 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	p2List_item<Module*>* item = list_modules.getLast();
+	std::vector<Module*>::iterator item = modulelist.begin();
 
-	while(item != NULL && ret == true)
+	while(item != modulelist.end() && ret == true)
 	{
-		ret = item->data->CleanUp();
-		item = item->prev;
+		ret = (*item)->CleanUp();
+		item--;
 	}
 	return ret;
 }
 
 void Application::AddModule(Module* mod)
 {
-	list_modules.add(mod);
-	//modules.push_back(mod);			//modules pushback to vector.
+	modulelist.push_back(mod);
 }
 
 Application* App = nullptr;
