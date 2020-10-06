@@ -8,6 +8,7 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
+#include "ModuleGUI.h"
 
 #include <list>
 #include <vector>
@@ -16,11 +17,12 @@
 class Application
 {
 public:
-	ModuleWindow* window;
-	ModuleInput* input;
-	ModuleSceneIntro* scene_intro;
-	ModuleRenderer3D* renderer3D;
-	ModuleCamera3D* camera;
+	ModuleWindow*			window;
+	ModuleInput*			input;
+	ModuleSceneIntro*		scene_intro;
+	ModuleRenderer3D*		renderer3D;
+	ModuleCamera3D*			camera;
+	ModuleGUI*				GUI;
 
 	bool debug;
 	bool renderPrimitives;
