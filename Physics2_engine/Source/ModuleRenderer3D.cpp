@@ -1,12 +1,16 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+
+#include "glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+#pragma comment (lib, "glew/libx86/glew32.lib")
+
 
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled), context()
 {
@@ -98,6 +102,15 @@ bool ModuleRenderer3D::Init()
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	//Initialize glew
+
+	GLenum glew_init_return = glewInit();									// glew must be initialized after an OpenGL rendering context has been created.
+
+	if (glew_init_return != GLEW_NO_ERROR)
+	{
+		LOG("GLEW could not initialize! SDL_Error: %s\n", SDL_GetError());
+	}
 
 	return ret;
 }

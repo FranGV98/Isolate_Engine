@@ -28,6 +28,9 @@
     <Filter Include="Dependencies\ImGui">
       <UniqueIdentifier>{b5b5e055-a2bf-4362-a30e-79b662eb6f7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dependencies\glew">
+      <UniqueIdentifier>{ea661ec7-d476-463d-8ade-a622d16c1efe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -92,6 +95,18 @@
     </ClInclude>
     <ClInclude Include="ModuleGUI.h">
       <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="glew\include\eglew.h">
+      <Filter>Dependencies\glew</Filter>
+    </ClInclude>
+    <ClInclude Include="glew\include\glew.h">
+      <Filter>Dependencies\glew</Filter>
+    </ClInclude>
+    <ClInclude Include="glew\include\glxew.h">
+      <Filter>Dependencies\glew</Filter>
+    </ClInclude>
+    <ClInclude Include="glew\include\wglew.h">
+      <Filter>Dependencies\glew</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
