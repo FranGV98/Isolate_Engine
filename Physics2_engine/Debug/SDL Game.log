@@ -1,3 +1,0 @@
-﻿  ModulePhysics.cpp
-D:\GUILLEM\UPC\20-21\Motors\Isolate\Isolate_Engine\Physics2_engine\ModulePhysics.cpp(35,8): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  SDL Game.vcxproj -> D:\GUILLEM\UPC\20-21\Motors\Isolate\Isolate_Engine\Physics2_engine\Debug\2D Physics - class 2.exe
