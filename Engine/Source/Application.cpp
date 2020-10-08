@@ -125,7 +125,7 @@ bool Application::CleanUp()
 	while(item != modulelist.end() && ret == true)
 	{
 		ret = (*item)->CleanUp();
-		item--;
+		item++;
 	}
 	return ret;
 }

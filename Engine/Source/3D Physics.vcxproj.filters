@@ -25,9 +25,6 @@
     <Filter Include="Dependencies">
       <UniqueIdentifier>{4622443a-8f68-48f8-9195-1ea1b3850c49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dependencies\ImGui">
-      <UniqueIdentifier>{b5b5e055-a2bf-4362-a30e-79b662eb6f7e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Dependencies\glew">
       <UniqueIdentifier>{ea661ec7-d476-463d-8ade-a622d16c1efe}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,9 @@
     </Filter>
     <Filter Include="Dependencies\MathGeoLib\Algorithm\Random">
       <UniqueIdentifier>{194d47e9-18a8-4447-b853-95b5c141e899}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\ImGui">
+      <UniqueIdentifier>{b5b5e055-a2bf-4362-a30e-79b662eb6f7e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -300,6 +300,9 @@
     <ClInclude Include="MathGeoLib\src\Time\Clock.h">
       <Filter>Dependencies\MathGeoLib\Time</Filter>
     </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_opengl3.h">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -448,6 +451,9 @@
     </ClCompile>
     <ClCompile Include="MathGeoLib\src\Time\Clock.cpp">
       <Filter>Dependencies\MathGeoLib\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_opengl3.cpp">
+      <Filter>Dependencies\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

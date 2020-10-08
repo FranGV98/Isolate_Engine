@@ -1,18 +1,16 @@
+#include <Windows.h>
+
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "glew/include/glew.h"
-#include <Windows.h>
+#include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
-
-#include "SDL\include\SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glew/libx86/glew32.lib")

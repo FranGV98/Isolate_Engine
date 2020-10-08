@@ -55,34 +55,23 @@ IMGUI_IMPL_API void     ImGui_ImplOpenGL3_DestroyDeviceObjects();
  && !defined(IMGUI_IMPL_OPENGL_LOADER_GLBINDING3) \
  && !defined(IMGUI_IMPL_OPENGL_LOADER_CUSTOM)
 
-// Try to detect GLES on matching platforms
-#if defined(__APPLE__)
-#include "TargetConditionals.h"
-#endif
-#if (defined(__APPLE__) && (TARGET_OS_IOS || TARGET_OS_TV)) || (defined(__ANDROID__))
-#define IMGUI_IMPL_OPENGL_ES3               // iOS, Android  -> GL ES 3, "#version 300 es"
-#elif defined(__EMSCRIPTEN__)
-#define IMGUI_IMPL_OPENGL_ES2               // Emscripten    -> GL ES 2, "#version 100"
-
-// Otherwise try to detect supported Desktop OpenGL loaders..
-#elif defined(__has_include)
-#if __has_include(<glew/include/glew.h>)
-    #define IMGUI_IMPL_OPENGL_LOADER_GLEW
-#elif __has_include(<glad/glad.h>)
-    #define IMGUI_IMPL_OPENGL_LOADER_GLAD
-#elif __has_include(<glad/gl.h>)
-    #define IMGUI_IMPL_OPENGL_LOADER_GLAD2
-#elif __has_include(<GL/gl3w.h>)
-    #define IMGUI_IMPL_OPENGL_LOADER_GL3W
-#elif __has_include(<glbinding/glbinding.h>)
-    #define IMGUI_IMPL_OPENGL_LOADER_GLBINDING3
-#elif __has_include(<glbinding/Binding.h>)
-    #define IMGUI_IMPL_OPENGL_LOADER_GLBINDING2
-#else
-    #error "Cannot detect OpenGL loader!"
-#endif
-#else
-    #define IMGUI_IMPL_OPENGL_LOADER_GL3W   // Default to GL3W embedded in our repository
-#endif
-
+	#if defined(__has_include)                                  // Otherwise try to detect supported Desktop OpenGL loaders..
+		#if __has_include(<GL/glew.h>)
+			#define IMGUI_IMPL_OPENGL_LOADER_GLEW
+		#elif __has_include(<glad/glad.h>)
+			#define IMGUI_IMPL_OPENGL_LOADER_GLAD
+		#elif __has_include(<glad/gl.h>)
+			#define IMGUI_IMPL_OPENGL_LOADER_GLAD2
+		#elif __has_include("glew/include/glew.h")
+			#define IMGUI_IMPL_OPENGL_LOADER_GL3W
+		#elif __has_include(<glbinding/glbinding.h>)
+			#define IMGUI_IMPL_OPENGL_LOADER_GLBINDING3
+		#elif __has_include(<glbinding/Binding.h>)
+			#define IMGUI_IMPL_OPENGL_LOADER_GLBINDING2
+		#else
+			#error "Cannot detect OpenGL loader!"
+		#endif
+		#else
+			#define IMGUI_IMPL_OPENGL_LOADER_GL3W   // Default to GL3W embedded in our repository
+	#endif
 #endif
