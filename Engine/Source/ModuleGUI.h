@@ -16,13 +16,26 @@ public:
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
+	void RequestBrowser(const char*);
 
 public:
 	ImGuiIO io;
-	bool show_demo_window;
-	bool show_another_window;
+	bool show_demo_window = false;
+	bool show_about_window = false;
+	bool show_config_window = false;
 	ImVec4 clear_color;
-	bool fullscreen;
+
+	char label[25];
+	char title[25];
+
+	char values[25];
+	char format[10];
+	int bright_int, width_int, height_int;
+	std::vector<float> fps_log, ms_log;
+	Timer frame_time;
+
+	bool fullscreen = false;
+	
 };
 
 #endif // !__MODULE_GUI_H__
