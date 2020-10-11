@@ -20,6 +20,11 @@ bool ModuleGUI::Init()
 	LOG("Creating GUI");
 	bool ret = true;
 
+	//Window size
+
+	height_int = App->window->Height();
+	width_int = App->window->Width();
+
 	glewInit(); //Glew
 
 	 // Setup Dear ImGui context
@@ -148,13 +153,13 @@ update_status ModuleGUI::PostUpdate(float dt)
 		if (ImGui::CollapsingHeader("Window"))
 		{
 			bright_int = 0;
-			ImGui::SliderInt("Brightness", &bright_int, 0, 10);			
+			ImGui::SliderInt("Brightness", &bright_int, 0, 10);						
 			
-			height_int = 0;
-			ImGui::SliderInt("Height", &height_int, 0, 10);
+			ImGui::SliderInt("Height", &height_int, 1, 1080);
 			
-			width_int = 0;
-			ImGui::SliderInt("Width", &width_int, 0, 10);
+			ImGui::SliderInt("Width", &width_int, 0, 1920);
+
+			SDL_GetWindowSize(App->window->window, &height_int, &width_int);
 
 			if (ImGui::Checkbox("Fullscreen", &fullscreen))
 				if(fullscreen)
@@ -162,6 +167,17 @@ update_status ModuleGUI::PostUpdate(float dt)
 				else
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_MINIMIZED);
 		}
+		if (ImGui::CollapsingHeader("Hardware"))
+		{
+			ImGui::Text("CPU: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(0, 1, 0, 1),"%d (Cache: %d kb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+
+			ImGui::Text("RAM: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d Mb", SDL_GetSystemRAM());
+		}
+
 		ImGui::End();
 	}
 
