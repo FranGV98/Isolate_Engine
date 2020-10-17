@@ -13,6 +13,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	renderer3D = new ModuleRenderer3D();
 	camera = new ModuleCamera3D();
 	GUI = new ModuleGUI();
+	Import_3D = new Module3DImport();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -23,6 +24,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(camera);
 	AddModule(input);
 	AddModule(GUI);
+	AddModule(Import_3D);
 	
 	// Scenes
 	AddModule(scene_intro);

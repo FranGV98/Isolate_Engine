@@ -2,7 +2,8 @@
 
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleRenderer3D.h"
+#include "Module.h"
+#include "3DShapes.h"
 #include "glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
@@ -119,6 +120,14 @@ bool ModuleRenderer3D::Init()
 	return ret;
 }
 
+bool ModuleRenderer3D::Start()
+{
+	App->Import_3D->LoadMesh("Resources/assets/3D/Katana.FBX");
+
+	return true;
+}
+
+
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
@@ -141,6 +150,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	//App->Import_3D->CreateDirectCube();
+	App->Import_3D->CreateIndexArrayCube();
+	//App->Import_3D->CreateArrayCube();
+
+
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -168,3 +182,18 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
+
+//ESTO NO TIRA
+//void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
+//{
+//	/*glEnableClientState(GL_VERTEX_ARRAY);
+//	glBindBuffer(GL_ARRAY_BUFFER, mymesh->id_vertex);
+//	glVertexPointer(3, GL_FLOAT, 0, NULL);
+//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mymesh->id_index);
+//	glDrawElements(GL_TRIANGLES, mymesh->num_index, GL_UNSIGNED_INT, nullptr);
+//
+//	glBindBuffer(GL_ARRAY_BUFFER, 0);
+//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//
+//	glDisableClientState(GL_VERTEX_ARRAY);*/
+//}

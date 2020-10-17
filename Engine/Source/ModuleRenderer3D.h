@@ -4,6 +4,7 @@
 #include "glmath.h"
 #include "Light.h"
 
+
 #define MAX_LIGHTS 8
 
 class ModuleRenderer3D : public Module
@@ -13,11 +14,14 @@ public:
 	~ModuleRenderer3D();
 
 	bool Init();
+	bool Start();
 	update_status PreUpdate(float dt) override;
 	update_status PostUpdate(float dt) override;
 	bool CleanUp();
 
 	void OnResize(int width, int height);
+
+	//void DrawMesh(MeshData* mymesh);  NO TIRA
 
 public:
 	Light lights[MAX_LIGHTS];

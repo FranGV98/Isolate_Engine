@@ -9,6 +9,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGUI.h"
+#include "Module3DImport.h"
 
 #include <list>
 #include <vector>
@@ -23,6 +24,7 @@ public:
 	ModuleRenderer3D*		renderer3D;
 	ModuleCamera3D*			camera;
 	ModuleGUI*				GUI;
+	Module3DImport*			Import_3D;
 
 	bool debug;
 	bool renderPrimitives;
