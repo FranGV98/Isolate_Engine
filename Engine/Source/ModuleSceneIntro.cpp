@@ -19,7 +19,7 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
+	App->camera->Move(vec3(50.0f, 50.0f, 50.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
 	const int SnakeLength		= 7;
@@ -84,6 +84,14 @@ bool ModuleSceneIntro::CleanUp()
 
 void ModuleSceneIntro::HandleDebugInput()
 {
+	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+	{
+		if (App->GUI->wireframe == true)
+			App->GUI->wireframe = false;
+		else 
+			App->GUI->wireframe = true;
+	}
+
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		DebugSpawnPrimitive(new Sphere());

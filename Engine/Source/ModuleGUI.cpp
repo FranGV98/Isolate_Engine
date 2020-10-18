@@ -166,6 +166,17 @@ update_status ModuleGUI::PostUpdate(float dt)
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
 				else
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_MINIMIZED);
+			if (ImGui::Checkbox("Wireframe", &wireframe))
+				if (wireframe)
+				{
+					LOG("Wireframe ON");
+					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				}
+				else
+				{
+					LOG("Wireframe OFF");
+					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				}		
 		}
 		if (ImGui::CollapsingHeader("Hardware"))
 		{

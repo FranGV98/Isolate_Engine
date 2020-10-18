@@ -35,6 +35,7 @@ public:
 	Timer frame_time;
 
 	bool fullscreen = false;
+	bool wireframe = false;
 	
 };
 
