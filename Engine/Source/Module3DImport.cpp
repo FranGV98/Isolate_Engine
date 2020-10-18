@@ -41,7 +41,7 @@ MeshData* Module3DImport::LoadMesh(char* file_path)
 			ourMesh->vertex = new float[ourMesh->num_vertex * 3];
 			memcpy(ourMesh->vertex, loaded_mesh->mVertices, sizeof(float) * ourMesh->num_vertex * 3);
 			/*LOG("Error loading scene %s", ourMesh->num_vertices);*/
-
+			
 			// copy faces
 			if (loaded_mesh->HasFaces())
 			{
@@ -54,6 +54,13 @@ MeshData* Module3DImport::LoadMesh(char* file_path)
 						memcpy(&ourMesh->index[j * 3], loaded_mesh->mFaces[j].mIndices, 3 * sizeof(uint));
 					}
 				}
+			}
+			if (loaded_mesh->HasNormals())
+			{
+				ourMesh->num_normals = loaded_mesh->mNumVertices;
+				ourMesh->normals = new float[ourMesh->num_normals * 3];
+				memcpy(ourMesh->normals, loaded_mesh->mNormals, sizeof(float) * ourMesh->num_normals * 3);
+
 			}
 		}
 		aiReleaseImport(scene);

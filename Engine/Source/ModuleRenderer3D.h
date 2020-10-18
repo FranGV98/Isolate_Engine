@@ -7,6 +7,8 @@
 
 #define MAX_LIGHTS 8
 
+struct MeshData;
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -21,11 +23,13 @@ public:
 
 	void OnResize(int width, int height);
 
-	//void DrawMesh(MeshData* mymesh);  NO TIRA
+	void DrawMesh(MeshData* mymesh);  //NO TIRA
 
 public:
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ProjectionMatrix;
+
+	MeshData* current_mesh;
 };

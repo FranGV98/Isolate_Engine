@@ -4,11 +4,16 @@
 #include "Globals.h"
 #include "glmath.h"
 
+
 struct MeshData
 {
 	uint id_index = 0; //index in VRAM
 	uint num_index = 0;
 	uint* index = nullptr;
+
+	uint id_normal = 0; //normal in VRAM
+	uint num_normals = 0;
+	float* normals = nullptr;
 	
 	uint id_vertex = 0; //unique vertex in VRAM
 	uint num_vertex = 0;
@@ -27,6 +32,7 @@ public:
 	void CreateArrayCube();
 	void CreateIndexArrayCube();
 public:
+
 	//CUBE
 	float g_vertex_buffer_data[108] = {
 	-1.0f,-1.0f,-1.0f,

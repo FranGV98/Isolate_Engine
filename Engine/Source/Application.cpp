@@ -23,9 +23,9 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(GUI);
 	AddModule(Import_3D);
-	
+	AddModule(GUI);
+
 	// Scenes
 	AddModule(scene_intro);
 
