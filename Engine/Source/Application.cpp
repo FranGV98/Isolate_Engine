@@ -9,8 +9,8 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
 	window = new ModuleWindow();
 	input = new ModuleInput();
-	scene_intro = new ModuleSceneIntro();
 	renderer3D = new ModuleRenderer3D();
+	scene_intro = new ModuleSceneIntro();
 	camera = new ModuleCamera3D();
 	GUI = new ModuleGUI();
 	Import_3D = new Module3DImport();
@@ -23,8 +23,8 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(Import_3D);
 	AddModule(GUI);
+	AddModule(Import_3D);
 
 	// Scenes
 	AddModule(scene_intro);

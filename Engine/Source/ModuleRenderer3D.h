@@ -23,7 +23,8 @@ public:
 
 	void OnResize(int width, int height);
 
-	void DrawMesh(MeshData* mymesh);  //NO TIRA
+	void MeshBuffer(MeshData* currentmesh);
+	void DrawMesh(MeshData* mymesh);
 
 public:
 	Light lights[MAX_LIGHTS];

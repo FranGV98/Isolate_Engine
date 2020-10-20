@@ -31,8 +31,8 @@ public:
 	void CreateDirectCube();
 	void CreateArrayCube();
 	void CreateIndexArrayCube();
-public:
 
+public:
 	//CUBE
 	float g_vertex_buffer_data[108] = {
 	-1.0f,-1.0f,-1.0f,
@@ -91,6 +91,7 @@ public:
 						   -1, 1, 1,  -1, 1,-1,  -1,-1,-1,  -1,-1, 1,   // v1,v6,v7,v2 (left face)
 						   -1,-1,-1,   1,-1,-1,   1,-1, 1,  -1,-1, 1,   // v7,v4,v3,v2 (bottom face)
 							1,-1,-1,  -1,-1,-1,  -1, 1,-1,   1, 1,-1 }; // v4,v7,v6,v5 (back face)
+	uint textureID = 0;
 };
 
 

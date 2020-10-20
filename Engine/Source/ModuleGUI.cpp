@@ -89,7 +89,7 @@ update_status ModuleGUI::PostUpdate(float dt)
 	//TOP BAR MENU:
 	if (ImGui::BeginMainMenuBar())
 	{
-		if (ImGui::BeginMenu("File"))
+		if (ImGui::BeginMenu("Project"))
 		{
 			if (ImGui::MenuItem("Quit", "ESC")) 
 				return UPDATE_STOP; 
@@ -98,8 +98,9 @@ update_status ModuleGUI::PostUpdate(float dt)
 		}
 		if (ImGui::BeginMenu("Options"))
 		{
-			if (ImGui::MenuItem("Configuration"))
-				show_config_window = !show_config_window;
+			ImGui::MenuItem("Configuration", NULL, &show_config_window);
+			//if (ImGui::MenuItem("Configuration"))
+			//	show_config_window = !show_config_window;
 
 			if (ImGui::MenuItem("OpenGL")) {}
 
@@ -140,85 +141,95 @@ update_status ModuleGUI::PostUpdate(float dt)
 		ms_log.erase(ms_log.begin());
 
 	//CONFIG WINDOW:
-	if (show_config_window) {
-		ImGui::Begin("Configuration");
-		ImGui::Text("Options");
-		if (ImGui::CollapsingHeader("Application"))
+	if (show_config_window)
+	{
+		if (!ImGui::Begin("Configuration", &show_config_window))
 		{
-			sprintf_s(title, 25, "Framerate %1.f", fps_log[fps_log.size() - 1]);
-			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-			sprintf_s(title, 25, "Milliseconds %1.f", ms_log[ms_log.size() - 1]);
-			ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+			ImGui::End();
 		}
-		if (ImGui::CollapsingHeader("Window"))
+		else
 		{
-			bright_int = 0;
-			ImGui::SliderInt("Brightness", &bright_int, 0, 10);						
-			
-			ImGui::SliderInt("Height", &height_int, 1, 1080);
-			
-			ImGui::SliderInt("Width", &width_int, 0, 1920);
+			ImGui::Text("Options");
+			if (ImGui::CollapsingHeader("Application"))
+			{
+				sprintf_s(title, 25, "Framerate %1.f", fps_log[fps_log.size() - 1]);
+				ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+				sprintf_s(title, 25, "Milliseconds %1.f", ms_log[ms_log.size() - 1]);
+				ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+			}
+			if (ImGui::CollapsingHeader("Window"))
+			{
+				bright_int = 0;
+				ImGui::SliderInt("Brightness", &bright_int, 0, 10);
 
-			SDL_GetWindowSize(App->window->window, &height_int, &width_int);
+				ImGui::SliderInt("Height", &height_int, 1, 1080);
 
-			if (ImGui::Checkbox("Fullscreen", &fullscreen))
-				if(fullscreen)
-					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
-				else
-					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_MINIMIZED);
-			if (ImGui::Checkbox("Wireframe", &wireframe))
-				if (wireframe)
-				{
-					LOG("Wireframe ON");
-					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-				}
-				else
-				{
-					LOG("Wireframe OFF");
-					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-				}		
+				ImGui::SliderInt("Width", &width_int, 0, 1920);
+
+				SDL_GetWindowSize(App->window->window, &height_int, &width_int);
+
+				if (ImGui::Checkbox("Fullscreen", &fullscreen))
+					if (fullscreen)
+						SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
+					else
+						SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_MINIMIZED);
+				if (ImGui::Checkbox("Wireframe", &wireframe))
+					if (wireframe == true)
+					{
+						LOG("Wireframe ON");
+					}
+					else
+						LOG("Wireframe OFF");
+			}
+			if (ImGui::CollapsingHeader("Hardware"))
+			{
+				ImGui::Text("CPU: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d (Cache: %d kb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+
+				ImGui::Text("RAM: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d Mb", SDL_GetSystemRAM());
+			}
+
+			ImGui::End();
 		}
-		if (ImGui::CollapsingHeader("Hardware"))
-		{
-			ImGui::Text("CPU: ");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(0, 1, 0, 1),"%d (Cache: %d kb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
-
-			ImGui::Text("RAM: ");
-			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d Mb", SDL_GetSystemRAM());
-		}
-
-		ImGui::End();
 	}
+		
 
 	//ABOUT WINDOW
 	if (show_about_window)
 	{
-		ImGui::Begin("About");
-		ImGui::Text("ISOLATE ENGINE \n \nEngine made by mamadisima people");
-		ImGui::Spacing();
-		ImGui::Text("Developed by:");
+		if (!ImGui::Begin("About", &show_about_window))
+		{
+			ImGui::End();
+		}
+		else
+		{
+			ImGui::Text("ISOLATE ENGINE \n \nEngine made by mamadisima people");
+			ImGui::Spacing();
+			ImGui::Text("Developed by:");
 
-		sprintf(label, "Fran Guerrero");
-		if (ImGui::Selectable(label, true))	
-			RequestBrowser("https://github.com/FranGV98");		
-		sprintf(label, "Guillem Turmo");
-		if (ImGui::Selectable(label, true))	
-			RequestBrowser("https://github.com/Turmo11");
+			sprintf(label, "Fran Guerrero");
+			if (ImGui::Selectable(label, true))	
+				RequestBrowser("https://github.com/FranGV98");		
+			sprintf(label, "Guillem Turmo");
+			if (ImGui::Selectable(label, true))	
+				RequestBrowser("https://github.com/Turmo11");
 
-		ImGui::Separator();
-		ImGui::Text("3rd Party Libraries used:");
-		ImGui::BulletText("SDL");
-		ImGui::BulletText("Glew");
-		ImGui::BulletText("ImGui");
-		ImGui::BulletText("MathGeoLib");
-		ImGui::BulletText("Assimp");
-		ImGui::BulletText("OpenGL");
-		ImGui::Separator();
-		ImGui::Text("License: \n \n(Mucho texto)");
+			ImGui::Separator();
+			ImGui::Text("3rd Party Libraries used:");
+			ImGui::BulletText("SDL");
+			ImGui::BulletText("Glew");
+			ImGui::BulletText("ImGui");
+			ImGui::BulletText("MathGeoLib");
+			ImGui::BulletText("Assimp");
+			ImGui::BulletText("OpenGL");
+			ImGui::Separator();
+			ImGui::Text("License: \n \n(Mucho texto)");
 
-		ImGui::End();
+			ImGui::End();
+		}
 	}
 
 	//RENDERER

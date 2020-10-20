@@ -124,21 +124,8 @@ bool ModuleRenderer3D::Init()
 bool ModuleRenderer3D::Start()
 {
 
-	current_mesh = App->Import_3D->LoadMesh("assets/3D/warrior.FBX");
-
-	glGenBuffers(1, (GLuint*)&current_mesh->id_vertex);
-	glBindBuffer(GL_ARRAY_BUFFER, current_mesh->id_vertex);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * current_mesh->num_vertex * 3, current_mesh->vertex, GL_STATIC_DRAW);
-
-
-	glGenBuffers(1, (GLuint*)&current_mesh->id_index);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, current_mesh->id_index);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * current_mesh->num_index, current_mesh->index, GL_STATIC_DRAW);
-
-	glGenBuffers(1, (GLuint*)&current_mesh->id_normal);
-	glBindBuffer(GL_ARRAY_BUFFER, current_mesh->id_normal);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * current_mesh->num_normals, current_mesh->normals, GL_STATIC_DRAW);
-
+	current_mesh = App->Import_3D->LoadMesh("assets/3D/Katana.FBX");
+	MeshBuffer(current_mesh);
 
 	return true;
 }
@@ -160,15 +147,21 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-	
-	if (App->GUI->wireframe == true) {
-		LOG("Wireframe ON");
+
+
+	//WIREFRAME
+	if (App->GUI->wireframe == true)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	else if (App->GUI->wireframe == false) {
-		LOG("Wireframe OFF");
+	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
+
+
+	//App->Import_3D->CreateIndexArrayCube();
+	//App->Import_3D->CreateArrayCube();
+
+	DrawMesh(current_mesh);
+
+	App->Import_3D->CreateDirectCube();
 
 	return UPDATE_CONTINUE;
 }
@@ -176,10 +169,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	//App->Import_3D->CreateDirectCube();
-	//App->Import_3D->CreateIndexArrayCube();
-	//App->Import_3D->CreateArrayCube();
-	DrawMesh(current_mesh);
 
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
@@ -209,11 +198,26 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-//ESTO NO TIRA
+
+//Mesh
+
+void ModuleRenderer3D::MeshBuffer(MeshData* currentmesh)
+{
+	glGenBuffers(1, (GLuint*)& currentmesh->id_vertex);
+	glBindBuffer(GL_ARRAY_BUFFER, currentmesh->id_vertex);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentmesh->num_vertex * 3, currentmesh->vertex, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)& currentmesh->id_index);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentmesh->id_index);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentmesh->num_index, currentmesh->index, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)& currentmesh->id_normal);
+	glBindBuffer(GL_ARRAY_BUFFER, currentmesh->id_normal);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * currentmesh->num_normals, currentmesh->normals, GL_STATIC_DRAW);
+}
+
 void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
 {
-	// -------------------
-
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 
