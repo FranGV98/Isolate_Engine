@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "Module.h"
 #include "3DShapes.h"
+#include "Importer.h"
 #include "glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
@@ -123,9 +124,9 @@ bool ModuleRenderer3D::Init()
 
 bool ModuleRenderer3D::Start()
 {
+	Importer::Init();
 
-	current_mesh = App->Import_3D->LoadMesh("assets/3D/Katana.FBX");
-	MeshBuffer(current_mesh);
+	ImportMesh("assets/3D/Katana.FBX");
 
 	return true;
 }
@@ -148,7 +149,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		lights[i].Render();
 
 
-
 	//WIREFRAME
 	if (App->GUI->wireframe == true)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -156,12 +156,14 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
-	//App->Import_3D->CreateIndexArrayCube();
-	//App->Import_3D->CreateArrayCube();
+	std::vector<MeshData*>::iterator item = mesh_container.begin();
 
-	DrawMesh(current_mesh);
+	for (; item != mesh_container.end(); ++item)
+	{
+		DrawMesh((*item));
+	}
 
-	App->Import_3D->CreateDirectCube();
+	//App->Import_3D->CreateDirectCube();
 
 	return UPDATE_CONTINUE;
 }
@@ -179,6 +181,7 @@ bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
 
+	Importer::CleanUp();
 	SDL_GL_DeleteContext(context);
 
 	return true;
@@ -198,22 +201,33 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
+void ModuleRenderer3D::ImportMesh(char* file_path)
+{
+	Importer::LoadMesh(file_path, mesh_container);
+	std::vector<MeshData*>::iterator item = mesh_container.begin();
+
+	for (; item != mesh_container.end(); ++item)
+	{
+		MeshBuffer((*item));
+	}
+
+}
 
 //Mesh
 
 void ModuleRenderer3D::MeshBuffer(MeshData* currentmesh)
 {
-	glGenBuffers(1, (GLuint*)& currentmesh->id_vertex);
-	glBindBuffer(GL_ARRAY_BUFFER, currentmesh->id_vertex);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentmesh->num_vertex * 3, currentmesh->vertex, GL_STATIC_DRAW);
+	glGenBuffers(1, (GLuint*)& currentmesh->buffersId[MeshData::vertex]);
+	glBindBuffer(GL_ARRAY_BUFFER, currentmesh->buffersId[MeshData::vertex]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentmesh->buffersLength[MeshData::vertex] * 3, currentmesh->vertices, GL_STATIC_DRAW);
 
-	glGenBuffers(1, (GLuint*)& currentmesh->id_index);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentmesh->id_index);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentmesh->num_index, currentmesh->index, GL_STATIC_DRAW);
+	glGenBuffers(1, (GLuint*)& currentmesh->buffersId[MeshData::index]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentmesh->buffersId[MeshData::index]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentmesh->buffersLength[MeshData::index], currentmesh->indices, GL_STATIC_DRAW);
 
-	glGenBuffers(1, (GLuint*)& currentmesh->id_normal);
-	glBindBuffer(GL_ARRAY_BUFFER, currentmesh->id_normal);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * currentmesh->num_normals, currentmesh->normals, GL_STATIC_DRAW);
+	glGenBuffers(1, (GLuint*)& currentmesh->buffersId[MeshData::normal]);
+	glBindBuffer(GL_ARRAY_BUFFER, currentmesh->buffersId[MeshData::normal]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * currentmesh->buffersLength[MeshData::normal], currentmesh->normals, GL_STATIC_DRAW);
 }
 
 void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
@@ -221,15 +235,15 @@ void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 
-	glBindBuffer(GL_ARRAY_BUFFER, mymesh->id_vertex);
+	glBindBuffer(GL_ARRAY_BUFFER, mymesh->buffersId[MeshData::vertex]);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-	glBindBuffer(GL_ARRAY_BUFFER, mymesh->id_normal);
+	glBindBuffer(GL_ARRAY_BUFFER, mymesh->buffersId[MeshData::normal]);
 	glNormalPointer(GL_FLOAT, 0, NULL);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mymesh->id_index);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mymesh->buffersId[MeshData::index]);
 
-	glDrawElements(GL_TRIANGLES, mymesh->num_index, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, mymesh->buffersLength[MeshData::index], GL_UNSIGNED_INT, NULL);
 
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);

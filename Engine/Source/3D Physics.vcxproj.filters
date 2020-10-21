@@ -309,6 +309,9 @@
     <ClInclude Include="3DShapes.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Importer.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">

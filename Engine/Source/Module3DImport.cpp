@@ -6,7 +6,7 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/mesh.h"
-#include"Assimp/include/postprocess.h"
+
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 

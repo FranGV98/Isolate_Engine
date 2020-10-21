@@ -9,7 +9,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGUI.h"
-#include "Module3DImport.h"
+//#include "Module3DImport.h"
 
 #include <list>
 #include <vector>
@@ -18,13 +18,13 @@
 class Application
 {
 public:
-	ModuleWindow*			window;
-	ModuleInput*			input;
-	ModuleSceneIntro*		scene_intro;
-	ModuleRenderer3D*		renderer3D;
-	ModuleCamera3D*			camera;
-	ModuleGUI*				GUI;
-	Module3DImport*			Import_3D;
+	ModuleWindow*			window = nullptr;
+	ModuleInput*			input = nullptr;
+	ModuleSceneIntro*		scene_intro = nullptr;
+	ModuleRenderer3D*		renderer3D = nullptr;
+	ModuleCamera3D*			camera = nullptr;
+	ModuleGUI*				GUI = nullptr;
+	//Module3DImport*			Import_3D = nullptr;
 
 	bool debug;
 	bool renderPrimitives;

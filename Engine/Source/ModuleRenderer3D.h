@@ -24,6 +24,7 @@ public:
 	void OnResize(int width, int height);
 
 	void MeshBuffer(MeshData* currentmesh);
+	void ImportMesh(char* file_path);
 	void DrawMesh(MeshData* mymesh);
 
 public:
@@ -32,5 +33,5 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ProjectionMatrix;
 
-	MeshData* current_mesh;
+	std::vector<MeshData*> mesh_container;
 };
