@@ -26,6 +26,7 @@ public:
 	void MeshBuffer(MeshData* currentmesh);
 	void ImportMesh(char* file_path);
 	void DrawMesh(MeshData* mymesh);
+	void DropMesh();
 
 public:
 	Light lights[MAX_LIGHTS];

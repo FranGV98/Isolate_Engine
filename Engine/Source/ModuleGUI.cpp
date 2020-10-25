@@ -154,25 +154,60 @@ update_status ModuleGUI::PostUpdate(float dt)
 			{
 				sprintf_s(title, 25, "Framerate %1.f", fps_log[fps_log.size() - 1]);
 				ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+
 				sprintf_s(title, 25, "Milliseconds %1.f", ms_log[ms_log.size() - 1]);
 				ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+
+				ImVec4 color(1.0f, 1.0f, 0.0f, 1.0f);
+				int fps_c = 1000 / App->ms_limit;
+				if (ImGui::SliderInt("Max FPS", &fps_c, 10, 120)) App->ms_limit = 1000 / fps_c;
 			}
 			if (ImGui::CollapsingHeader("Window"))
 			{
-				bright_int = 0;
-				ImGui::SliderInt("Brightness", &bright_int, 0, 10);
+				ImGui::SliderFloat("Brightness", &bright_float, 0.0f, 1.0f);
+				SDL_SetWindowBrightness(App->window->window, bright_float);
 
-				ImGui::SliderInt("Height", &height_int, 1, 1080);
+				if (ImGui::Combo("Resolution", &current_resolution, resolution, IM_ARRAYSIZE(resolution)))
+				{
+					switch (current_resolution)
+					{
+					case 0:
+						width_int = 3840;
+						height_int = 2160;
+						break;
 
-				ImGui::SliderInt("Width", &width_int, 0, 1920);
+					case 1:
+						width_int = 2560;
+						height_int = 1440;
+						break;
 
-				SDL_GetWindowSize(App->window->window, &height_int, &width_int);
+					case 2:
+						width_int = 1920;
+						height_int = 1080;
+						break;
+
+					case 3:
+						width_int = 1290;
+						height_int = 720;
+						break;
+
+					case 4:
+						width_int = 720;
+						height_int = 480;
+						break;
+
+					}
+					SDL_SetWindowSize(App->window->window, width_int, height_int);
+				}			
 
 				if (ImGui::Checkbox("Fullscreen", &fullscreen))
 					if (fullscreen)
 						SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
 					else
 						SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_MINIMIZED);
+			}
+			if (ImGui::CollapsingHeader("Renderer"))
+			{
 				if (ImGui::Checkbox("Wireframe", &wireframe))
 					if (wireframe == true)
 					{
@@ -180,6 +215,11 @@ update_status ModuleGUI::PostUpdate(float dt)
 					}
 					else
 						LOG("Wireframe OFF");
+
+				ImGui::Checkbox("GL_DEPTH", &gl_depth);
+				ImGui::Checkbox("GL_CULL_FACE", &gl_cull_face);
+				ImGui::Checkbox("GL_LIGHT", &gl_light);
+				ImGui::Checkbox("GL_COLOR_MATERIAL", &gl_color_mat);
 			}
 			if (ImGui::CollapsingHeader("Hardware"))
 			{
