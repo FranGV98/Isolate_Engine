@@ -185,7 +185,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	{
 		DrawMesh((*item));
 	}
-	LOG("num of items: %d ", item);
 
 	return UPDATE_CONTINUE;
 }

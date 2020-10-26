@@ -56,6 +56,7 @@ bool ModuleGUI::Init()
 	show_demo_window = false;
 	show_about_window = false;
 	show_config_window = false;
+	show_console_window = true;
 
 	return ret;
 };
@@ -103,6 +104,13 @@ update_status ModuleGUI::PostUpdate(float dt)
 			//	show_config_window = !show_config_window;
 
 			if (ImGui::MenuItem("OpenGL")) {}
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Windows"))
+		{
+			ImGui::MenuItem("Console", NULL, &show_console_window);
+	
 
 			ImGui::EndMenu();
 		}
@@ -236,6 +244,34 @@ update_status ModuleGUI::PostUpdate(float dt)
 		}
 	}
 		
+	//CONSOLE 
+	if (show_console_window)
+	{
+		if (!ImGui::Begin("Console", &show_console_window))
+		{
+			ImGui::End();
+		}
+		else
+		{
+			std::vector<char*>::iterator item = logs.begin();
+
+			for (item; item != logs.end(); ++item)
+			{
+				ImGui::TextUnformatted((*item));
+			}
+
+			if (update_scroll)
+			{
+				ImGui::SetScrollHere(1.0f);
+				update_scroll = false;
+			}
+
+			ImGui::End();
+		}
+		
+	}
+
+
 
 	//ABOUT WINDOW
 	if (show_about_window)
@@ -296,6 +332,7 @@ update_status ModuleGUI::PostUpdate(float dt)
 
 bool ModuleGUI::CleanUp()
 {
+	ClearConsole();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
@@ -307,4 +344,20 @@ bool ModuleGUI::CleanUp()
 void ModuleGUI::RequestBrowser(const char* path)
 {
 	ShellExecuteA(0, "Open", path, 0, "", 5);
+}
+
+void ModuleGUI::ConsoleLog(char* log)
+{
+	logs.push_back(strdup(log));
+	update_scroll = true;
+}
+
+void ModuleGUI::ClearConsole()
+{
+	for (int i = 0; i < logs.size(); ++i)					
+	{
+		free(logs[i]);
+	}
+
+	logs.clear();
 }
