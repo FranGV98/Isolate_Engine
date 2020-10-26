@@ -19,6 +19,7 @@ public:
 	void RequestBrowser(const char*);
 	void ConsoleLog(char* log);
 	void ClearConsole();
+	void ShortKeys();
 
 public:
 	ImGuiIO io;

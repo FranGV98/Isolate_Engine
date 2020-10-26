@@ -63,6 +63,7 @@ bool ModuleGUI::Init()
 
 update_status ModuleGUI::PreUpdate(float dt)
 {
+	ShortKeys();
 	return UPDATE_CONTINUE;
 }
 
@@ -109,7 +110,7 @@ update_status ModuleGUI::PostUpdate(float dt)
 		}
 		if (ImGui::BeginMenu("Windows"))
 		{
-			ImGui::MenuItem("Console", NULL, &show_console_window);
+			ImGui::MenuItem("Console", "F6", &show_console_window);
 	
 
 			ImGui::EndMenu();
@@ -360,4 +361,12 @@ void ModuleGUI::ClearConsole()
 	}
 
 	logs.clear();
+}
+
+void ModuleGUI::ShortKeys()
+{
+	if (App->input->GetKey(SDL_SCANCODE_F6) == KEY_STATE::KEY_DOWN)
+	{
+		show_console_window = !show_console_window;
+	}
 }
