@@ -135,7 +135,7 @@ bool ModuleRenderer3D::Start()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-	DropMesh();
+
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -183,17 +183,16 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	for (; item != mesh_container.end(); ++item)
 	{
+		DrawNormalDir((*item));
 		DrawMesh((*item));
 	}
-	LOG("num of items: %d ", item);
-
 	return UPDATE_CONTINUE;
 }
 
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-
+	DropMesh();
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -251,7 +250,18 @@ void ModuleRenderer3D::MeshBuffer(MeshData* currentmesh)
 	glBindBuffer(GL_ARRAY_BUFFER, currentmesh->buffersId[MeshData::normal]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * currentmesh->buffersLength[MeshData::normal], currentmesh->normals, GL_STATIC_DRAW);
 }
+void ModuleRenderer3D::DrawNormalDir(MeshData* currentmesh)
+{
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 0.0f, 0.0f);
 
+		for (size_t i = 0; i < currentmesh->buffersLength[MeshData::vertex] * 3; i += 3)
+		{
+			glVertex3f(currentmesh->vertices[i] , currentmesh->vertices[i + 1], currentmesh->vertices[i + 2]); // X vertex, Y vertex and Z vertex
+			glVertex3f(currentmesh->vertices[i] + currentmesh->normals[i], currentmesh->vertices[i + 1] + currentmesh->normals[i+1], currentmesh->vertices[i + 2] + currentmesh->normals[i+2]);  
+		}
+	glEnd();
+}
 void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -279,7 +289,7 @@ void ModuleRenderer3D::DropMesh()
 	{
 		if (event.type == SDL_DROPFILE)
 		{
-			Importer::LoadMesh(event.drop.file, mesh_container);
+			ImportMesh(event.drop.file);
 
 			LOG("Mesh imported");
 		}

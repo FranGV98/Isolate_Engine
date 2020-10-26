@@ -25,6 +25,7 @@ public:
 
 	void MeshBuffer(MeshData* currentmesh);
 	void ImportMesh(char* file_path);
+	void DrawNormalDir(MeshData* currentmesh);
 	void DrawMesh(MeshData* mymesh);
 	void DropMesh();
 
