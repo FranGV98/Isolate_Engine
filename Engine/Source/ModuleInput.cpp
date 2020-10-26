@@ -43,10 +43,8 @@ update_status ModuleInput::PreUpdate(float dt)
 	{
 		if(keys[i] == 1)
 		{
-			if (keyboard[i] == KEY_IDLE) 
-			{
+			if(keyboard[i] == KEY_IDLE)
 				keyboard[i] = KEY_DOWN;
-			}
 			else
 				keyboard[i] = KEY_REPEAT;
 		}

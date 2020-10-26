@@ -9,7 +9,7 @@
 
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
-
+#pragma comment (lib, "glew/libx86/glew32.lib")
 
 struct MeshData
 {
