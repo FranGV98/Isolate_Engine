@@ -183,7 +183,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	for (; item != mesh_container.end(); ++item)
 	{
-		DrawNormalDir((*item));
+		if(App->GUI->draw_normals_dir)
+			DrawNormalDir((*item));
+
 		DrawMesh((*item));
 	}
 	return UPDATE_CONTINUE;

@@ -83,13 +83,15 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-	int last_frame_ms = ms_timer.Read();
-
-	if (last_frame_ms < ms_limit)
+	if (App->GUI->enable_fps_limit)
 	{
-		SDL_Delay(ms_limit - last_frame_ms);
-	}
+		int last_frame_ms = ms_timer.Read();
 
+		if (last_frame_ms < ms_limit)
+		{
+			SDL_Delay(ms_limit - last_frame_ms);
+		}
+	}	
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
