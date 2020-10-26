@@ -135,6 +135,8 @@ bool ModuleRenderer3D::Start()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
+	DropMesh();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -149,21 +151,41 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		lights[i].Render();
 
 
-	//WIREFRAME
+	//RENDER OPTIONS
 	if (App->GUI->wireframe == true)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+	if (App->GUI->gl_cull_face == true)
+		glEnable(GL_CULL_FACE_MODE);
+	else
+		glDisable(GL_CULL_FACE_MODE);
 
+	if (App->GUI->gl_depth == true)
+		glEnable(GL_DEPTH);
+	else
+		glDisable(GL_DEPTH);
+	
+	if (App->GUI->gl_light == true)
+		glEnable(GL_LIGHTING);
+	else
+		glDisable(GL_LIGHTING);
+
+	if (App->GUI->gl_color_mat == true)
+		glEnable(GL_COLOR_MATERIAL);
+	else
+		glDisable(GL_COLOR_MATERIAL);
+	
+
+	//Call Draw
 	std::vector<MeshData*>::iterator item = mesh_container.begin();
 
 	for (; item != mesh_container.end(); ++item)
 	{
 		DrawMesh((*item));
 	}
-
-	//App->Import_3D->CreateDirectCube();
+	LOG("num of items: %d ", item);
 
 	return UPDATE_CONTINUE;
 }
@@ -248,4 +270,18 @@ void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
+}
+
+void ModuleRenderer3D::DropMesh()
+{
+	SDL_Event event;
+	while (SDL_PollEvent(&event))
+	{
+		if (event.type == SDL_DROPFILE)
+		{
+			Importer::LoadMesh(event.drop.file, mesh_container);
+
+			LOG("Mesh imported");
+		}
+	}
 }

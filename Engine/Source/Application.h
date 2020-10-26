@@ -28,10 +28,13 @@ public:
 
 	bool debug;
 	bool renderPrimitives;
-private:
+
+public:
 
 	Timer	ms_timer;
 	float	dt;
+	float	fps;
+	float	ms_limit;
 
 public:
 

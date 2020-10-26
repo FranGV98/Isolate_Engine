@@ -30,12 +30,21 @@ public:
 
 	char values[25];
 	char format[10];
-	int bright_int, width_int, height_int;
+	float bright_float = 1.0f;
+	int  width_int, height_int;
 	std::vector<float> fps_log, ms_log;
 	Timer frame_time;
+	int fps;
 
 	bool fullscreen = false;
 	bool wireframe = false;
+	bool gl_depth = true;
+	bool gl_cull_face = false;
+	bool gl_light = true;
+	bool gl_color_mat = true;
+
+	const char* resolution[5] = { "3840 x 2160","2560 x 1440","1920 x 1080", "1290 x 720", "720 x 480" };
+	int current_resolution = 3;
 	
 };
 
