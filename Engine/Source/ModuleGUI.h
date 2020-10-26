@@ -18,11 +18,17 @@ public:
 	bool CleanUp();
 	void RequestBrowser(const char*);
 
+	void ConsoleLog(char* log);
+	void ClearConsole();
+	void ShortKeys();
+
 public:
 	ImGuiIO io;
 	bool show_demo_window = false;
 	bool show_about_window = false;
 	bool show_config_window = false;
+	bool show_console_window = false;
+
 	ImVec4 clear_color;
 
 	char label[25];
@@ -47,6 +53,9 @@ public:
 
 	const char* resolution[5] = { "3840 x 2160","2560 x 1440","1920 x 1080", "1290 x 720", "720 x 480" };
 	int current_resolution = 3;
+
+	std::vector<char*> logs;
+	bool update_scroll;
 	
 };
 
