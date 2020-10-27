@@ -138,14 +138,14 @@ update_status ModuleGUI::PostUpdate(float dt)
 		ImGui::End();
 	}
 
-	//FPS GRAPH
+	//FPS & MS GRAPH
 	if (fps_log.size() <= 100)
 		fps_log.push_back(ImGui::GetIO().Framerate);
 	else
 		fps_log.erase(fps_log.begin());
 
 	if (ms_log.size() <= 100)
-		ms_log.push_back(frame_time.Read());
+		ms_log.push_back(App->dt * 1000);
 	else
 		ms_log.erase(ms_log.begin());
 
@@ -166,10 +166,13 @@ update_status ModuleGUI::PostUpdate(float dt)
 
 				sprintf_s(title, 25, "Milliseconds %1.f", ms_log[ms_log.size() - 1]);
 				ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
-
+				
+				ImGui::Checkbox("Limit FPS", &enable_fps_limit);
+				ImGui::SameLine();
 				ImVec4 color(1.0f, 1.0f, 0.0f, 1.0f);
-				int fps_c = 1000 / App->ms_limit;
-				if (ImGui::SliderInt("Max FPS", &fps_c, 10, 120)) App->ms_limit = 1000 / fps_c;
+				int max_fps = 1000 / App->ms_limit;
+				if (ImGui::SliderInt("Max FPS", &max_fps, 10, 144)) 
+					App->ms_limit = 1000 / max_fps;
 			}
 			if (ImGui::CollapsingHeader("Window"))
 			{
@@ -229,6 +232,7 @@ update_status ModuleGUI::PostUpdate(float dt)
 				ImGui::Checkbox("GL_CULL_FACE", &gl_cull_face);
 				ImGui::Checkbox("GL_LIGHT", &gl_light);
 				ImGui::Checkbox("GL_COLOR_MATERIAL", &gl_color_mat);
+				ImGui::Checkbox("Draw normals direction", &draw_normals_dir);
 			}
 			if (ImGui::CollapsingHeader("Hardware"))
 			{
