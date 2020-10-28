@@ -41,19 +41,28 @@ update_status ModuleCamera3D::Update(float dt)
 	// Now we can make this movememnt frame rate independant!
 
 	vec3 newPos(0,0,0);
-	float speed = 20.0f * dt;
+	float speed = 5.0f * dt;
 	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-		speed = 8.0f * dt;
+		speed = 20.0f * dt;
 
-	if(App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-	if(App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
+	if(App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) 
+		newPos.y += speed;
+	if(App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT)
+		newPos.y -= speed;
+	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		newPos -= Z * speed;
+	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) 
+		newPos += Z * speed;
 
-	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
+
+	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
+		newPos -= X * speed;
+	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) 
+		newPos += X * speed;
 
 
-	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+	newPos -= Z * speed * App->input->GetMouseZ() * 20;
+
 
 	Position += newPos;
 	Reference += newPos;
@@ -93,6 +102,26 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 
 		Position = Reference + Z * length(Position);
+	}
+	
+	//CENTER MOUSE MOVEMENT
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
+	{
+		int dx = -App->input->GetMouseXMotion();
+		int dy = -App->input->GetMouseYMotion();
+
+		if (dx != 0)
+		{
+			newPos += X * dx * dt * 20 * speed;
+		}
+		if (dy != 0)
+		{
+			newPos -= Y * dy * dt * 20 * speed;
+		}
+
+		Position += newPos;
+		Reference += newPos;
+
 	}
 
 	return UPDATE_CONTINUE;

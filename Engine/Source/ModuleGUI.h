@@ -39,9 +39,8 @@ public:
 	float bright_float = 1.0f;
 	int  width_int, height_int;
 	std::vector<float> fps_log, ms_log;
+	int max_fps;
 	Timer frame_time;
-	int fps;
-	bool enable_fps_limit = false;
 
 	bool fullscreen = false;
 	bool wireframe = false;

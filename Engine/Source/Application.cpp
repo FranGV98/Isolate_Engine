@@ -68,6 +68,8 @@ bool Application::Init()
 		item++;
 	}
 	
+	ms_limit = 1000 / 60;
+
 	ms_timer.Start();
 	return ret;
 }
@@ -83,7 +85,7 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-	if (App->GUI->enable_fps_limit)
+	if (enable_fps_limit)
 	{
 		int last_frame_ms = ms_timer.Read();
 

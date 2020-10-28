@@ -58,6 +58,8 @@ bool ModuleGUI::Init()
 	show_config_window = false;
 	show_console_window = true;
 
+	
+
 	return ret;
 };
 
@@ -159,6 +161,7 @@ update_status ModuleGUI::PostUpdate(float dt)
 		else
 		{
 			ImGui::Text("Options");
+				
 			if (ImGui::CollapsingHeader("Application"))
 			{
 				sprintf_s(title, 25, "Framerate %1.f", fps_log[fps_log.size() - 1]);
@@ -167,11 +170,11 @@ update_status ModuleGUI::PostUpdate(float dt)
 				sprintf_s(title, 25, "Milliseconds %1.f", ms_log[ms_log.size() - 1]);
 				ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 				
-				ImGui::Checkbox("Limit FPS", &enable_fps_limit);
+				ImGui::Checkbox("Limit FPS", &App->enable_fps_limit);
 				ImGui::SameLine();
 				ImVec4 color(1.0f, 1.0f, 0.0f, 1.0f);
-				int max_fps = 1000 / App->ms_limit;
-				if (ImGui::SliderInt("Max FPS", &max_fps, 10, 144)) 
+				 max_fps = 1000 / App->ms_limit;
+				if (ImGui::SliderInt("Max FPS", &max_fps, 10, 120)) 
 					App->ms_limit = 1000 / max_fps;
 			}
 			if (ImGui::CollapsingHeader("Window"))
@@ -233,6 +236,16 @@ update_status ModuleGUI::PostUpdate(float dt)
 				ImGui::Checkbox("GL_LIGHT", &gl_light);
 				ImGui::Checkbox("GL_COLOR_MATERIAL", &gl_color_mat);
 				ImGui::Checkbox("Draw normals direction", &draw_normals_dir);
+			}
+			if (ImGui::CollapsingHeader("Input"))
+			{
+				ImGui::Text("MOUSE POSITION    ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "X: %d Y: %d", App->input->GetMouseX(), App->input->GetMouseY());
+
+				ImGui::Text("MOUSE MOTION    ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "X: %d Y: %d", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
 			}
 			if (ImGui::CollapsingHeader("Hardware"))
 			{

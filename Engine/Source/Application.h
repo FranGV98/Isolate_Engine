@@ -35,6 +35,7 @@ public:
 	float	dt;
 	float	fps;
 	float	ms_limit;
+	bool	enable_fps_limit = true;
 
 public:
 

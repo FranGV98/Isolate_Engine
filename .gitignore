@@ -332,3 +332,11 @@ ASALocalRun/
 *.tlog
 *.lastbuildstate
 Engine/Source/Resources/imgui.ini
+*.tlog
+Engine/Source/Intermediate/Isolate_Engine.tlog/CL.command.1.tlog
+Engine/Source/Intermediate/Isolate_Engine.tlog/CL.command.1.tlog
+Engine/Source/Intermediate/Isolate_Engine.tlog/CL.read.1.tlog
+Engine/Source/Intermediate/Isolate_Engine.tlog/CL.write.1.tlog
+Engine/Source/Intermediate/Isolate_Engine.tlog/link.read.1.tlog
+Engine/Source/Intermediate/vc142.idb
+*.tlog

@@ -43,8 +43,12 @@ update_status ModuleInput::PreUpdate(float dt)
 	{
 		if(keys[i] == 1)
 		{
-			if(keyboard[i] == KEY_IDLE)
+			if (keyboard[i] == KEY_IDLE)
+			{
 				keyboard[i] = KEY_DOWN;
+				input_name = SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)i));
+				LOG("Keyboard button: %s", input_name);
+			}
 			else
 				keyboard[i] = KEY_REPEAT;
 		}
@@ -67,8 +71,10 @@ update_status ModuleInput::PreUpdate(float dt)
 	{
 		if(buttons & SDL_BUTTON(i))
 		{
-			if(mouse_buttons[i] == KEY_IDLE)
+			if (mouse_buttons[i] == KEY_IDLE)
+			{
 				mouse_buttons[i] = KEY_DOWN;
+			}
 			else
 				mouse_buttons[i] = KEY_REPEAT;
 		}
