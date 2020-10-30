@@ -5,10 +5,10 @@
 #include "Module.h"
 #include "3DShapes.h"
 #include "Importer.h"
-#include "glew/include/glew.h"
-#include "SDL\include\SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
+//#include "glew/include/glew.h"
+//#include "SDL\include\SDL_opengl.h"
+//#include <gl/GL.h>
+//#include <gl/GLU.h>
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
@@ -104,7 +104,7 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
-
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	// Projection matrix for
@@ -118,7 +118,6 @@ bool ModuleRenderer3D::Init()
 	{
 		LOG("GLEW could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
-
 	return ret;
 }
 
@@ -126,7 +125,19 @@ bool ModuleRenderer3D::Start()
 {
 	Importer::Init();
 
-	ImportMesh("assets/3D/Katana.FBX");
+	//Initialize DevIL
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
+
+	//CreateCheckerTexture();
+	ImportMesh("assets/3D/BakerHouse.FBX");
+
+	//Textures
+	TextureData tmp = Importer::LoadTexture("assets/3D/Baker_house.png");
+	houseID = tmp.ID;
+
 
 	return true;
 }
@@ -135,8 +146,6 @@ bool ModuleRenderer3D::Start()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -158,9 +167,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	if (App->GUI->gl_cull_face == true)
-		glEnable(GL_CULL_FACE_MODE);
+		glEnable(GL_CULL_FACE);
 	else
-		glDisable(GL_CULL_FACE_MODE);
+		glDisable(GL_CULL_FACE);
 
 	if (App->GUI->gl_depth == true)
 		glEnable(GL_DEPTH);
@@ -188,12 +197,16 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		if(App->GUI->draw_normals_dir)
 			DrawNormalDir((*item));
 	}
+
+	//CreateDirectCube();
+
 	return UPDATE_CONTINUE;
 }
 
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+
 	DropMesh();
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
@@ -233,7 +246,6 @@ void ModuleRenderer3D::ImportMesh(char* file_path)
 	{
 		MeshBuffer((*item));
 	}
-
 }
 
 //Mesh
@@ -248,9 +260,19 @@ void ModuleRenderer3D::MeshBuffer(MeshData* currentmesh)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentmesh->buffersId[MeshData::index]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentmesh->buffersLength[MeshData::index], currentmesh->indices, GL_STATIC_DRAW);
 
-	glGenBuffers(1, (GLuint*)& currentmesh->buffersId[MeshData::normal]);
-	glBindBuffer(GL_ARRAY_BUFFER, currentmesh->buffersId[MeshData::normal]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * currentmesh->buffersLength[MeshData::normal], currentmesh->normals, GL_STATIC_DRAW);
+	if (currentmesh->normals != nullptr)
+	{
+		glGenBuffers(1, (GLuint*)& currentmesh->buffersId[MeshData::normal]);
+		glBindBuffer(GL_ARRAY_BUFFER, currentmesh->buffersId[MeshData::normal]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * currentmesh->buffersLength[MeshData::normal], currentmesh->normals, GL_STATIC_DRAW);
+	}	
+
+	if (currentmesh->texture_coord != nullptr)
+	{
+		glGenBuffers(1, (GLuint*)& currentmesh->buffersId[MeshData::texture]);
+		glBindBuffer(GL_ARRAY_BUFFER, currentmesh->buffersId[MeshData::texture]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentmesh->buffersLength[MeshData::texture] * 2, currentmesh->texture_coord, GL_STATIC_DRAW);
+	}
 }
 void ModuleRenderer3D::DrawNormalDir(MeshData* currentmesh)
 {
@@ -268,6 +290,13 @@ void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	//Pass TextureID
+	//glBindTexture(GL_TEXTURE_2D, houseID);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mymesh->buffersId[MeshData::texture]);
+	//glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mymesh->buffersId[MeshData::vertex]);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -281,7 +310,7 @@ void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
 
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
-
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void ModuleRenderer3D::DropMesh()
@@ -297,3 +326,49 @@ void ModuleRenderer3D::DropMesh()
 		}
 	}
 }
+void ModuleRenderer3D::CreateCheckerTexture()
+{
+
+	GLubyte checkerImage[64][64][4];
+	for (int i = 0; i < 64; i++)
+	{
+		for (int j = 0; j < 64; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerImage[i][j][0] = (GLubyte)c;
+			checkerImage[i][j][1] = (GLubyte)c;
+			checkerImage[i][j][2] = (GLubyte)c;
+			checkerImage[i][j][3] = (GLubyte)255;
+		}
+	}
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &checkerID);
+	glBindTexture(GL_TEXTURE_2D, checkerID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+//SHAPES
+void ModuleRenderer3D::CreateDirectCube()
+{
+	uint my_indices = 0;
+	glGenBuffers(1, (GLuint*) & (my_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, indices, GL_STATIC_DRAW);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+	glBindTexture(GL_TEXTURE_2D, checkerID);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+

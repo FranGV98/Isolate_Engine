@@ -29,10 +29,8 @@ bool ModuleGUI::Init()
 
 	 // Setup Dear ImGui context
 	ImGui::CreateContext();
-	io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
@@ -66,11 +64,7 @@ bool ModuleGUI::Init()
 update_status ModuleGUI::PreUpdate(float dt)
 {
 	ShortKeys();
-	return UPDATE_CONTINUE;
-}
 
-update_status ModuleGUI::PostUpdate(float dt)
-{
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
@@ -86,6 +80,13 @@ update_status ModuleGUI::PostUpdate(float dt)
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleGUI::PostUpdate(float dt)
+{
+	SetDocking(ImGuiWindowFlags_MenuBar);	
+
 	//DEMO WINDOW
 	if (show_demo_window)
 		ImGui::ShowDemoWindow(&show_demo_window);
@@ -95,8 +96,8 @@ update_status ModuleGUI::PostUpdate(float dt)
 	{
 		if (ImGui::BeginMenu("Project"))
 		{
-			if (ImGui::MenuItem("Quit", "ESC")) 
-				return UPDATE_STOP; 
+			if (ImGui::MenuItem("Quit", "ESC"))
+				return UPDATE_STOP;
 
 			ImGui::EndMenu();
 		}
@@ -113,7 +114,7 @@ update_status ModuleGUI::PostUpdate(float dt)
 		if (ImGui::BeginMenu("Windows"))
 		{
 			ImGui::MenuItem("Console", "F6", &show_console_window);
-	
+
 
 			ImGui::EndMenu();
 		}
@@ -122,13 +123,13 @@ update_status ModuleGUI::PostUpdate(float dt)
 			if (ImGui::MenuItem("ImGui Demo"))
 				show_demo_window = !show_demo_window;
 
-			if (ImGui::MenuItem("Documentation")) 
+			if (ImGui::MenuItem("Documentation"))
 				RequestBrowser("https://github.com/FranGV98/Isolate_Engine/blob/master/README.md");
 
-			if (ImGui::MenuItem("Latest Release")) 
+			if (ImGui::MenuItem("Latest Release"))
 				RequestBrowser("https://github.com/FranGV98/Isolate_Engine");
 
-			if (ImGui::MenuItem("Report a bug")) 
+			if (ImGui::MenuItem("Report a bug"))
 				RequestBrowser("https://github.com/FranGV98/Isolate_Engine");
 
 			if (ImGui::MenuItem("About")) show_about_window = !show_about_window;
@@ -139,7 +140,7 @@ update_status ModuleGUI::PostUpdate(float dt)
 		ImGui::EndMenuBar();
 		ImGui::End();
 	}
-
+	
 	//FPS & MS GRAPH
 	if (fps_log.size() <= 100)
 		fps_log.push_back(ImGui::GetIO().Framerate);
@@ -324,24 +325,24 @@ update_status ModuleGUI::PostUpdate(float dt)
 		}
 	}
 
+	ImGui::End(); //Docking
+
 	//RENDERER
 	ImGui::Render();
-	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w); //Color entorno 3D (Skybox)
 	//glClear(GL_COLOR_BUFFER_BIT); //Canvas COLOR
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	//Update and Render additional Platform Windwo
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
+	//Update and Render additional Platform Windwow
+	//if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	//{
 		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
 		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-	}
-	
-	//SDL_GL_SwapWindow(App->window->window);
+	//}
 
 	return UPDATE_CONTINUE;
 }
@@ -385,4 +386,46 @@ void ModuleGUI::ShortKeys()
 	{
 		show_console_window = !show_console_window;
 	}
+}
+
+bool ModuleGUI::SetDocking(ImGuiWindowFlags window_flags)
+{
+	bool p_open = true;
+
+	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
+	// because it would be confusing to have two docking targets within each others.
+
+		ImGuiViewport* viewport = ImGui::GetWindowViewport();
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoDocking;
+
+	// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
+	// and handle the pass-thru hole, so we ask Begin() to not render a background.
+		window_flags |= ImGuiWindowFlags_NoBackground;
+
+	// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
+	// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
+	// all active windows docked into it will lose their parent and become undocked.
+	// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
+	// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("DockSpace Demo", &p_open, window_flags);
+
+	ImGui::PopStyleVar(3);
+
+	// DockSpace
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+	{
+		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+	}
+
+	return p_open;
 }

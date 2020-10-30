@@ -19,7 +19,7 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	App->camera->Move(vec3(50.0f, 50.0f, 50.0f));
+	App->camera->Move(vec3(5.0f, 5.0f, 5.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
 	const int SnakeLength		= 7;

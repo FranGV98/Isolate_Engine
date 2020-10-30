@@ -21,13 +21,16 @@ public:
 	void ConsoleLog(char* log);
 	void ClearConsole();
 	void ShortKeys();
+	bool SetDocking(ImGuiWindowFlags window_flag);
 
 public:
-	ImGuiIO io;
 	bool show_demo_window = false;
 	bool show_about_window = false;
 	bool show_config_window = false;
 	bool show_console_window = false;
+
+	bool docking_window = true;
+	//bool p_open = true;
 
 	ImVec4 clear_color;
 
