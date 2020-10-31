@@ -131,10 +131,10 @@ bool ModuleRenderer3D::Start()
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 
-	//CreateCheckerTexture();
+	//CreateCheckerTexture(); //not working
 	ImportMesh("assets/3D/BakerHouse.FBX");
 
-	//Textures
+	//Textures provisional
 	TextureData* tmp = Importer::LoadTexture("assets/3D/Baker_house.png");
 	houseID = tmp->ID;
 
@@ -292,7 +292,6 @@ void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	//Pass TextureID
 	glBindTexture(GL_TEXTURE_2D, houseID);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mymesh->buffersId[MeshData::texture]);

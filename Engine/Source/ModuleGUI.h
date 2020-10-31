@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "imgui/imgui.h"
+#include "Gameobject.h"
 
 class ModuleGUI : public Module
 {
@@ -22,12 +23,15 @@ public:
 	void ClearConsole();
 	void ShortKeys();
 	bool SetDocking(ImGuiWindowFlags window_flag);
+	void ObtainGameObjects(GameObject* go);
 
 public:
 	bool show_demo_window = false;
 	bool show_about_window = false;
 	bool show_config_window = false;
 	bool show_console_window = false;
+	bool show_gameobject_window = false;
+	bool show_hierarchy_window = false;
 
 	bool docking_window = true;
 	//bool p_open = true;
@@ -59,6 +63,12 @@ public:
 	std::vector<char*> logs;
 	bool update_scroll;
 	
+	GameObject* selected_gameobject = nullptr;
+	//
+	//float3 go_pos;
+	//Quat go_rot;
+	//float3 go_scale;
+	//
 };
 
 #endif // !__MODULE_GUI_H__

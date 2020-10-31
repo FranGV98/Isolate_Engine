@@ -55,6 +55,8 @@ bool ModuleGUI::Init()
 	show_about_window = false;
 	show_config_window = false;
 	show_console_window = true;
+	show_hierarchy_window = true;
+	show_gameobject_window = true;
 
 	
 
@@ -114,7 +116,8 @@ update_status ModuleGUI::PostUpdate(float dt)
 		if (ImGui::BeginMenu("Windows"))
 		{
 			ImGui::MenuItem("Console", "F6", &show_console_window);
-
+			ImGui::MenuItem("Hierarchy",NULL, &show_hierarchy_window);
+			ImGui::MenuItem("GameObject properties", NULL, &show_gameobject_window);
 
 			ImGui::EndMenu();
 		}
@@ -248,22 +251,26 @@ update_status ModuleGUI::PostUpdate(float dt)
 				ImGui::SameLine();
 				ImGui::TextColored(ImVec4(0, 1, 0, 1), "X: %d Y: %d", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
 			}
-			if (ImGui::CollapsingHeader("Hardware"))
+			if (ImGui::CollapsingHeader("Hardware & Software"))
 			{
 				ImGui::Text("CPU: ");
 				ImGui::SameLine();
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d (Cache: %d kb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d Cores (Cache: %d kb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
 
 				ImGui::Text("RAM: ");
 				ImGui::SameLine();
 				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d Mb", SDL_GetSystemRAM());
+
+				ImGui::Text("SDL version: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "2.0.12");
 			}
 
 			ImGui::End();
 		}
 	}
 		
-	//CONSOLE 
+	//CONSOLE WINDOW
 	if (show_console_window)
 	{
 		if (!ImGui::Begin("Console", &show_console_window))
@@ -288,6 +295,41 @@ update_status ModuleGUI::PostUpdate(float dt)
 			ImGui::End();
 		}
 
+	}
+
+	//HIERARCHY WINDOW
+	if (show_hierarchy_window)
+	{
+		ImGui::Begin("Hierarchy", &show_hierarchy_window);
+		//selected_gameobject = App->gobjects_manager->garden;
+		ObtainGameObjects(*App->gobjects_manager->game_objects.begin());
+
+		ImGui::End();
+	}	
+	
+	//GAME OBJECT WINDOW
+	if (show_gameobject_window)
+	{
+		ImGui::Begin("Inspector", &show_gameobject_window);
+		if (selected_gameobject != nullptr)
+		{
+			bool active_go = selected_gameobject->isActive();
+			ImGui::Checkbox(" ", &active_go);
+			selected_gameobject->SetActive(active_go);
+			ImGui::SameLine();
+			char go_name[25];
+			//ImGui::Text(selected_gameobject->GetName());
+			ImGui::InputText(" ", (char*)selected_gameobject->GetName(), IM_ARRAYSIZE(go_name));
+			ImGui::Spacing();
+			if (ImGui::CollapsingHeader("Transform"))
+			{   
+				ImGui::Text("Position");
+				ImGui::Text("Rotation");
+				ImGui::Text("Scale");
+			}
+
+		}
+		ImGui::End();
 	}
 
 	//ABOUT WINDOW
@@ -428,4 +470,22 @@ bool ModuleGUI::SetDocking(ImGuiWindowFlags window_flags)
 	}
 
 	return p_open;
+}
+
+void ModuleGUI::ObtainGameObjects(GameObject* go)
+{
+	if (ImGui::Button(go->GetName()))
+	{
+		selected_gameobject = go;
+	}
+	ImGui::SameLine();
+	if (ImGui::TreeNode(go->GetName()))
+	{
+		for (std::vector<GameObject*>::iterator item = go->children.begin(); item != go->children.end(); item++)
+		{
+			GameObject* current_go = *item;
+			ObtainGameObjects(current_go);
+		}
+		ImGui::TreePop();
+	}
 }

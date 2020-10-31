@@ -19,4 +19,7 @@ public:
 
 	std::vector<GameObject*> game_objects;
 
+	//test
+	GameObject* garden = nullptr;
+
 };
