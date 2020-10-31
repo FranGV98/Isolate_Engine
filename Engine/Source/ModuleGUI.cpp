@@ -301,8 +301,11 @@ update_status ModuleGUI::PostUpdate(float dt)
 	if (show_hierarchy_window)
 	{
 		ImGui::Begin("Hierarchy", &show_hierarchy_window);
-		//selected_gameobject = App->gobjects_manager->garden;
-		ObtainGameObjects(*App->gobjects_manager->game_objects.begin());
+
+		for (std::vector<GameObject*>::iterator item = App->gobjects_manager->game_objects.begin(); item != App->gobjects_manager->game_objects.end(); item++)
+		{			
+			ObtainGameObjects(*item);
+		}
 
 		ImGui::End();
 	}	
@@ -327,7 +330,21 @@ update_status ModuleGUI::PostUpdate(float dt)
 				ImGui::Text("Rotation");
 				ImGui::Text("Scale");
 			}
+		}
+		if (ImGui::CollapsingHeader("Create Objects"))
+		{
+			ImGui::Text("GEOMETRY");
+			ImGui::Separator();
 
+			if (ImGui::Button("Sphere")) App->gobjects_manager->CreateGameObject("Sphere", nullptr);
+			ImGui::SameLine();
+			if (ImGui::Button("Box")) App->gobjects_manager->CreateGameObject("Box", nullptr);
+			ImGui::SameLine();
+			if (ImGui::Button("Cone")) App->gobjects_manager->CreateGameObject("Cone", nullptr);
+			ImGui::SameLine();
+			if (ImGui::Button("Cylinder")) App->gobjects_manager->CreateGameObject("Cylinder", nullptr);
+
+			ImGui::Separator();
 		}
 		ImGui::End();
 	}
@@ -481,6 +498,10 @@ void ModuleGUI::ObtainGameObjects(GameObject* go)
 	ImGui::SameLine();
 	if (ImGui::TreeNode(go->GetName()))
 	{
+		/*if (ImGui::IsItemClicked())
+		{
+			selected_gameobject = go;
+		}*/
 		for (std::vector<GameObject*>::iterator item = go->children.begin(); item != go->children.end(); item++)
 		{
 			GameObject* current_go = *item;

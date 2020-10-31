@@ -18,8 +18,4 @@ public:
 	GameObject* CreateGameObject(std::string name, GameObject* parent = nullptr);
 
 	std::vector<GameObject*> game_objects;
-
-	//test
-	GameObject* garden = nullptr;
-
 };

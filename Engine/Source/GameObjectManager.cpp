@@ -12,7 +12,7 @@ GameObjectManager::~GameObjectManager()
 bool GameObjectManager::Start()
 {
 	//Create objects here, define parent nodes as GameObjects* so we can reference them on the childs
-	garden = CreateGameObject("Garden", nullptr);
+	GameObject* garden = CreateGameObject("Garden", nullptr);
 	CreateGameObject("Potato", garden);
 	CreateGameObject("Tomato", garden);
 	GameObject* flock = CreateGameObject("flock", garden);
@@ -21,6 +21,9 @@ bool GameObjectManager::Start()
 		CreateGameObject("Bird", flock);
 	}
 
+	GameObject* House = CreateGameObject("House", nullptr);
+	CreateGameObject("Fireplace", House);
+	
 	return true;
 }
 
