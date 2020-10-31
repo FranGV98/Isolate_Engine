@@ -110,6 +110,18 @@ namespace Importer
 					memcpy(ourMesh->normals, loaded_mesh->mNormals, sizeof(float) * ourMesh->buffersLength[MeshData::normal] * 3);
 
 				}
+				if (scene->mMeshes[i]->HasTextureCoords(0))
+				{
+					ourMesh->buffersLength[MeshData::texture] = scene->mMeshes[i]->mNumVertices;
+					ourMesh->texture_coord = new float[scene->mMeshes[i]->mNumVertices * 2];
+
+					for (int j = 0; j < ourMesh->buffersLength[MeshData::texture]; j++)
+					{
+						ourMesh->texture_coord[j * 2] = scene->mMeshes[i]->mTextureCoords[0][j].x;
+						ourMesh->texture_coord[j * 2 + 1] = scene->mMeshes[i]->mTextureCoords[0][j].y;
+					}
+				}
+
 				mesh_container.push_back(ourMesh);
 			}
 			aiReleaseImport(scene);
@@ -141,9 +153,9 @@ namespace Importer
 		return id;
 	}
 
-	TextureData LoadTexture(const char* file_path)
+	TextureData* LoadTexture(const char* file_path)
 	{
-		TextureData newTexture;
+		TextureData* newTexture = new TextureData;
 		uint i;
 
 		ilGenImages(1, &i);
@@ -159,10 +171,10 @@ namespace Importer
 
 			if (ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
 			{
-				newTexture.ID = CreateTexture(ilGetData(), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT), ilGetInteger(IL_IMAGE_FORMAT));
-				newTexture.height = ilGetInteger(IL_IMAGE_HEIGHT);
-				newTexture.width = ilGetInteger(IL_IMAGE_WIDTH);
-				newTexture.path = file_path;
+				newTexture->ID = CreateTexture(ilGetData(), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT), ilGetInteger(IL_IMAGE_FORMAT));
+				newTexture->height = ilGetInteger(IL_IMAGE_HEIGHT);
+				newTexture->width = ilGetInteger(IL_IMAGE_WIDTH);
+				newTexture->path = file_path;
 				LOG("Converted image %s", file_path);
 			}
 			else

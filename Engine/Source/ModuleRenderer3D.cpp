@@ -135,8 +135,8 @@ bool ModuleRenderer3D::Start()
 	ImportMesh("assets/3D/BakerHouse.FBX");
 
 	//Textures
-	TextureData tmp = Importer::LoadTexture("assets/3D/Baker_house.png");
-	houseID = tmp.ID;
+	TextureData* tmp = Importer::LoadTexture("assets/3D/Baker_house.png");
+	houseID = tmp->ID;
 
 
 	return true;
@@ -293,10 +293,10 @@ void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	//Pass TextureID
-	//glBindTexture(GL_TEXTURE_2D, houseID);
+	glBindTexture(GL_TEXTURE_2D, houseID);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mymesh->buffersId[MeshData::texture]);
-	//glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mymesh->buffersId[MeshData::vertex]);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -311,6 +311,8 @@ void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void ModuleRenderer3D::DropMesh()
