@@ -49,6 +49,9 @@
     <Filter Include="Dependencies\ImGui\MathGeoLib\Time">
       <UniqueIdentifier>{5b9fd0e3-e5bb-47db-9791-f7ba1dd4f19c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dependencies\PhysFS">
+      <UniqueIdentifier>{1470ff87-0bc6-4d03-a620-af2c7472f445}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -312,6 +315,12 @@
     <ClInclude Include="Importer.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="PhysFS\include\physfs.h">
+      <Filter>Dependencies\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -469,6 +478,9 @@
     </ClCompile>
     <ClCompile Include="3DShapes.cpp">
       <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Source\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,13 +18,24 @@ void log(const char file[], int line, const char* format, ...);
 #define HAVE_M_PI
 
 
+
+// Type Definitions
+typedef unsigned char uchar;
 typedef unsigned int uint;
+typedef unsigned __int32 uint32;
+typedef unsigned __int64 uint64;
 
 enum update_status
 {
 	UPDATE_CONTINUE = 1,
 	UPDATE_STOP,
 	UPDATE_ERROR
+};
+
+enum class RESULT
+{
+	FAILURE,
+	SUCCESS
 };
 
 // Configuration -----------
@@ -37,6 +48,28 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "Isolate Engine"
+#define ORGANIZATION "CITM - TTC"
+
+//Buffer utility
+// Deletes a buffer
+#define RELEASE( x )			\
+	{							\
+		if ( x != nullptr )		\
+		{						\
+			delete x;			\
+			x = nullptr;		\
+		}						\
+	}
+
+// Deletes an array of buffers
+#define RELEASE_ARRAY( x )		\
+	{							\
+		if (x != nullptr)		\
+		{						\
+			delete[] x;			\
+			x = nullptr;		\
+		}						\
+	}
 
 class Application;
 

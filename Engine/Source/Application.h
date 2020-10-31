@@ -9,6 +9,8 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGUI.h"
+#include "FileSystem.h"
+
 //#include "Module3DImport.h"
 
 #include <list>
@@ -24,7 +26,7 @@ public:
 	ModuleRenderer3D*		renderer3D = nullptr;
 	ModuleCamera3D*			camera = nullptr;
 	ModuleGUI*				GUI = nullptr;
-	//Module3DImport*			Import_3D = nullptr;
+	FileSystem*				file_system = nullptr;
 
 	bool debug;
 	bool renderPrimitives;

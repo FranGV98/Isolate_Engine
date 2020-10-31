@@ -86,6 +86,7 @@
     <ClInclude Include="3DShapes.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="glew\include\eglew.h" />
     <ClInclude Include="glew\include\glew.h" />
     <ClInclude Include="glew\include\glxew.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleSceneIntro.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="PhysFS\include\physfs.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
@@ -175,6 +177,7 @@
     <ClCompile Include="3DShapes.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
