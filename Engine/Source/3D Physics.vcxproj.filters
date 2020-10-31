@@ -52,6 +52,12 @@
     <Filter Include="Dependencies\PhysFS">
       <UniqueIdentifier>{1470ff87-0bc6-4d03-a620-af2c7472f445}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\GameObjects">
+      <UniqueIdentifier>{e1574929-e906-4741-896e-cf5fba7abaab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameObjects\Components">
+      <UniqueIdentifier>{13cd0d19-1013-4606-b3f0-7659d40712e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -312,13 +318,28 @@
     <ClInclude Include="3DShapes.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Importer.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="PhysFS\include\physfs.h">
       <Filter>Dependencies\PhysFS</Filter>
     </ClInclude>
     <ClInclude Include="FileSystem.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer.h">
+      <Filter>Source\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Source\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMesh.h">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTransform.h">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
   </ItemGroup>
@@ -480,6 +501,21 @@
       <Filter>Source\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="FileSystem.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMesh.cpp">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTransform.cpp">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
   </ItemGroup>

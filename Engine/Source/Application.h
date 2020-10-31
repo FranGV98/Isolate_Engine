@@ -10,11 +10,9 @@
 #include "ModuleCamera3D.h"
 #include "ModuleGUI.h"
 #include "FileSystem.h"
-
-//#include "Module3DImport.h"
+#include "GameObjectManager.h"
 
 #include <list>
-#include <vector>
 #include <memory>
 
 class Application
@@ -27,6 +25,7 @@ public:
 	ModuleCamera3D*			camera = nullptr;
 	ModuleGUI*				GUI = nullptr;
 	FileSystem*				file_system = nullptr;
+	GameObjectManager*		gobjects_manager = nullptr;
 
 	bool debug;
 	bool renderPrimitives;

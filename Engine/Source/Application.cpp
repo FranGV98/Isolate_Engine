@@ -1,19 +1,19 @@
 #include "Application.h"
 
 #include <functional>			//function pointers
-#include <vector>				//Vector 
 #include <algorithm>			//for_each()
 #include <memory>				//Smart pointers
 
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
-	window		= new ModuleWindow();
-	input		= new ModuleInput();
-	scene_intro = new ModuleSceneIntro();
-	renderer3D	= new ModuleRenderer3D();
-	camera		= new ModuleCamera3D();
-	GUI			= new ModuleGUI();
-	file_system = new FileSystem();
+	window				= new ModuleWindow();
+	input				= new ModuleInput();
+	scene_intro			= new ModuleSceneIntro();
+	renderer3D			= new ModuleRenderer3D();
+	camera				= new ModuleCamera3D();
+	GUI					= new ModuleGUI();
+	file_system			= new FileSystem();
+	gobjects_manager	= new GameObjectManager();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -25,7 +25,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(camera);
 	AddModule(input);
 	AddModule(GUI);
-	//AddModule(Import_3D);
+	AddModule(gobjects_manager);
 
 	// Scenes
 	AddModule(scene_intro);
