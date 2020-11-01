@@ -24,13 +24,14 @@ public:
 	void ShortKeys();
 	bool SetDocking(ImGuiWindowFlags window_flag);
 	void ObtainGameObjects(GameObject* go);
+	void SelectGameObject(GameObject* selected_object);
 
 public:
 	bool show_demo_window = false;
 	bool show_about_window = false;
 	bool show_config_window = false;
 	bool show_console_window = false;
-	bool show_gameobject_window = false;
+	bool show_inspector_window = false;
 	bool show_hierarchy_window = false;
 
 	bool docking_window = true;
@@ -64,11 +65,15 @@ public:
 	bool update_scroll;
 	
 	GameObject* selected_gameobject = nullptr;
+	GameObject* dragged_object = nullptr;
 	//
 	//float3 go_pos;
 	//Quat go_rot;
 	//float3 go_scale;
 	//
+
+	ImGuiTreeNodeFlags	tree_flags;
+
 };
 
 #endif // !__MODULE_GUI_H__

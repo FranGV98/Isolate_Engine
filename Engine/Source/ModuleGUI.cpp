@@ -11,6 +11,7 @@
 
 ModuleGUI::ModuleGUI(bool start_enabled) : Module(start_enabled)
 {
+
 }
 ModuleGUI::~ModuleGUI()
 {}
@@ -49,6 +50,7 @@ bool ModuleGUI::Init()
 
 	//Color
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	tree_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
 	//States
 	show_demo_window = false;
@@ -56,7 +58,7 @@ bool ModuleGUI::Init()
 	show_config_window = false;
 	show_console_window = true;
 	show_hierarchy_window = true;
-	show_gameobject_window = true;
+	show_inspector_window = true;
 
 	
 
@@ -115,9 +117,9 @@ update_status ModuleGUI::PostUpdate(float dt)
 		}
 		if (ImGui::BeginMenu("Windows"))
 		{
+			ImGui::MenuItem("Hierarchy","F1", &show_hierarchy_window);
+			ImGui::MenuItem("Inspector", "F2", &show_inspector_window);
 			ImGui::MenuItem("Console", "F6", &show_console_window);
-			ImGui::MenuItem("Hierarchy",NULL, &show_hierarchy_window);
-			ImGui::MenuItem("GameObject properties", NULL, &show_gameobject_window);
 
 			ImGui::EndMenu();
 		}
@@ -307,31 +309,28 @@ update_status ModuleGUI::PostUpdate(float dt)
 			ObtainGameObjects(*item);
 		}
 
-		/*ImGui::Separator();
-
-		for (std::vector<GameObject*>::iterator item = App->gobjects_manager->game_objects.begin(); item != App->gobjects_manager->game_objects.end(); item++)
-		{
-			GameObject* current_go = *item;
-			if (ImGui::Button(current_go->GetName()))
-			{
-				selected_gameobject = current_go;
-			}
-		}*/
-
 		ImGui::End();
 	}	
 	
-	//GAME OBJECT WINDOW
-	if (show_gameobject_window)
+	//INSPECTOR WINDOW
+	if (show_inspector_window)
 	{
-		ImGui::Begin("Inspector", &show_gameobject_window);
+		ImGui::Begin("Inspector", &show_inspector_window);
 		if (selected_gameobject != nullptr)
 		{
 			bool active_go = selected_gameobject->isActive();
-			ImGui::Checkbox(selected_gameobject->GetName(), &active_go);
-			selected_gameobject->SetActive(active_go);
-
-			//ImGui::InputText(" ", (char*)selected_gameobject->name.c_str(), 25, ImGuiInputTextFlags_EnterReturnsTrue);
+			if (ImGui::Checkbox(selected_gameobject->GetName(), &active_go))
+			{
+				selected_gameobject->SetActive(active_go);
+			}
+			
+			ImGui::SameLine();
+			char name_buff[32];
+			strcpy(name_buff, selected_gameobject->GetName());
+			if (ImGui::InputText("name", name_buff, IM_ARRAYSIZE(name_buff), ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				selected_gameobject->SetName(name_buff);
+			}
 			ImGui::Spacing();
 			if (ImGui::CollapsingHeader("Transform"))
 			{   
@@ -345,13 +344,13 @@ update_status ModuleGUI::PostUpdate(float dt)
 			ImGui::Text("GEOMETRY");
 			ImGui::Separator();
 
-			if (ImGui::Button("Sphere")) App->gobjects_manager->CreateGameObject("Sphere", nullptr);
+			if (ImGui::Button("Sphere")) App->gobjects_manager->CreateGameObject("Sphere", selected_gameobject);
 			ImGui::SameLine();
-			if (ImGui::Button("Box")) App->gobjects_manager->CreateGameObject("Box", nullptr);
+			if (ImGui::Button("Box")) App->gobjects_manager->CreateGameObject("Box", selected_gameobject);
 			ImGui::SameLine();
-			if (ImGui::Button("Cone")) App->gobjects_manager->CreateGameObject("Cone", nullptr);
+			if (ImGui::Button("Cone")) App->gobjects_manager->CreateGameObject("Cone", selected_gameobject);
 			ImGui::SameLine();
-			if (ImGui::Button("Cylinder")) App->gobjects_manager->CreateGameObject("Cylinder", nullptr);
+			if (ImGui::Button("Cylinder")) App->gobjects_manager->CreateGameObject("Cylinder", selected_gameobject);
 
 			ImGui::Separator();
 		}
@@ -450,7 +449,14 @@ void ModuleGUI::ClearConsole()
 
 void ModuleGUI::ShortKeys()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F6) == KEY_STATE::KEY_DOWN)
+
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
+	{
+		show_hierarchy_window = !show_hierarchy_window;
+	}if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_STATE::KEY_DOWN)
+	{
+		show_inspector_window = !show_inspector_window;
+	}if (App->input->GetKey(SDL_SCANCODE_F6) == KEY_STATE::KEY_DOWN)
 	{
 		show_console_window = !show_console_window;
 	}
@@ -500,22 +506,69 @@ bool ModuleGUI::SetDocking(ImGuiWindowFlags window_flags)
 
 void ModuleGUI::ObtainGameObjects(GameObject* go)
 {
-	if (ImGui::Button(go->GetName()))
+	//Grey when deactivated
+	ImVec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	if (!go->isActive())														// If the given game object is not active, the text of the tree node will be displayed in GREY.
 	{
-		selected_gameobject = go;
+		color = { 0.5f, 0.5f, 0.5f, 1.0f }; //Grey
 	}
-	ImGui::SameLine();
-	if (ImGui::TreeNode(go->GetName()))
+
+	ImGui::PushStyleColor(ImGuiCol_Text, color);
+
+	ImGuiTreeNodeFlags node_flags = tree_flags;
+
+	//ImGuiTreeNodeFlags_Leaf = Non collapsable + no arrow
+	if (go->children.empty())
 	{
-		/*if (ImGui::IsItemClicked())
+		node_flags |= ImGuiTreeNodeFlags_Leaf; 
+	}
+
+	if (go == selected_gameobject)
+	{
+		node_flags |= ImGuiTreeNodeFlags_Selected;
+	}
+
+	if (ImGui::TreeNodeEx(go->GetName(), node_flags))
+	{
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
-			selected_gameobject = go;
-		}*/
+			SelectGameObject(go);
+		}
+		if (ImGui::BeginDragDropSource())												
+		{
+			ImGui::SetDragDropPayload("DRAGGED_NODE", go, sizeof(GameObject));	
+			ImGui::Text("Dragging %s", go->GetName());				
+			dragged_object = go;
+
+			ImGui::EndDragDropSource();
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_NODE"))
+			{
+				go->InsertChild(dragged_object);								
+				dragged_object = nullptr;
+			}
+
+			ImGui::EndDragDropTarget();
+		}
+
 		for (std::vector<GameObject*>::iterator item = go->children.begin(); item != go->children.end(); item++)
 		{
 			GameObject* current_go = *item;
 			ObtainGameObjects(current_go);
 		}
 		ImGui::TreePop();
+	}
+	ImGui::PopStyleColor();
+}
+
+void ModuleGUI::SelectGameObject(GameObject* selected_object)
+{
+	if (selected_object != selected_gameobject)
+	{
+		selected_gameobject = selected_object;
 	}
 }

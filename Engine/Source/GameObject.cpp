@@ -41,15 +41,22 @@ bool GameObject::CleanUp()
 	return true;
 }
 
-void GameObject::SetActive(bool active)
+void GameObject::SetActive(bool toggle_active)
 {
-	if (active)
+	this->active = toggle_active;
+	UpdateActiveChildren(toggle_active, this);
+}
+
+void GameObject::UpdateActiveChildren(bool toggle_active, GameObject* parent)
+{
+	if (parent != nullptr)
 	{
-		this->active = true;
-	}
-	else
-	{
-		this->active = false;
+		for (int i = 0; i < parent->children.size(); ++i)
+		{
+			parent->children[i]->active = toggle_active;
+
+			UpdateActiveChildren(toggle_active, parent->children[i]);
+		}
 	}
 }
 
@@ -127,7 +134,38 @@ bool GameObject::HasComponent(ComponentClass type)
 	return false;
 }
 
-void GameObject::SetName(char* new_name)
+void GameObject::SetName(const char* new_name)
 {
 	name = new_name;
+}
+
+void GameObject::InsertChild(GameObject* new_child)
+{
+
+	if (new_child->parent != nullptr)
+	{
+		new_child->parent->RemoveChild(new_child);
+	}
+
+	ComponentTransform* child_transform = new_child->transform;
+
+	child_transform->UpdateTransform();
+
+	new_child->parent = this;
+
+	children.push_back(new_child);
+
+}
+
+void GameObject::RemoveChild(GameObject* child)
+{
+	std::vector<GameObject*>::iterator item;
+	for (item = children.begin(); item != children.end(); item++)
+	{
+		if (*item == child)
+		{
+			children.erase(item);
+			break;
+		}
+	}
 }
