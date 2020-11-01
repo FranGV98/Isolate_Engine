@@ -21,10 +21,11 @@ public:
 
 	void SetPosition(float3 position);
 	void SetScale(float3 scale);
+	void SetRotation(Quat rotation);
 	void UpdateTransform();
 
-private:
 
+private:
 	float4x4 transform;
 	float3 position;
 	Quat rotation;

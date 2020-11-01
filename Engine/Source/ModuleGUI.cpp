@@ -1,8 +1,10 @@
 #include "Globals.h"
 #include "Application.h"
-
+#include "Component.h"
+#include "ComponentTransform.h"
 #include "glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"
+//#include "MathGeoLib/src/MathGeoLib.h"
 
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -294,6 +296,11 @@ update_status ModuleGUI::PostUpdate(float dt)
 				update_scroll = false;
 			}
 
+			if (ImGui::Button("Clear"))
+			{
+				ClearConsole();
+			}
+
 			ImGui::End();
 		}
 
@@ -318,6 +325,12 @@ update_status ModuleGUI::PostUpdate(float dt)
 		ImGui::Begin("Inspector", &show_inspector_window);
 		if (selected_gameobject != nullptr)
 		{
+			//Focus target
+			App->camera->target_position.x = selected_gameobject->transform->GetPosition().x;
+			App->camera->target_position.y = selected_gameobject->transform->GetPosition().y;
+			App->camera->target_position.z = selected_gameobject->transform->GetPosition().z;
+
+			//set object active
 			bool active_go = selected_gameobject->isActive();
 			if (ImGui::Checkbox(" ", &active_go))
 			{
@@ -334,9 +347,26 @@ update_status ModuleGUI::PostUpdate(float dt)
 			ImGui::Spacing();
 			if (ImGui::CollapsingHeader("Transform"))
 			{   
-				ImGui::Text("Position");
-				ImGui::Text("Rotation");
-				ImGui::Text("Scale");
+				float3 f3_pos = selected_gameobject->transform->GetPosition();
+				float f_pos[3] = { f3_pos.x, f3_pos.y, f3_pos.z };
+				if (ImGui::DragFloat3("Position", f_pos, 0.5f, -999999, 999999, "%.2f", NULL))
+				{
+					selected_gameobject->transform->SetPosition(float3(f_pos[0], f_pos[1], f_pos[2]));
+				}
+
+				Quat f3_rot = selected_gameobject->transform->GetRotation();
+				float f_rot[3] = { f3_rot.x, f3_rot.y, f3_rot.z };
+				if (ImGui::DragFloat3("Rotation", f_rot, 0.5f, -999999, 999999, "%.2f", NULL))
+				{
+					selected_gameobject->transform->SetRotation(Quat(f_rot[0], f_rot[1], f_rot[2], 0));
+				}
+
+				float3 f3_scale = selected_gameobject->transform->GetScale();
+				float f_scale[3] = { f3_scale.x, f3_scale.y, f3_scale.z };
+				if (ImGui::DragFloat3("Scale", f_scale, 0.5f, -999999, 999999, "%.2f", NULL))
+				{
+					selected_gameobject->transform->SetScale(float3(f_scale[0], f_scale[1], f_scale[2]));
+				}
 			}
 		}
 		if (ImGui::CollapsingHeader("Create Objects"))
@@ -386,7 +416,9 @@ update_status ModuleGUI::PostUpdate(float dt)
 			ImGui::BulletText("Assimp");
 			ImGui::BulletText("OpenGL");
 			ImGui::Separator();
-			ImGui::Text("License: \n \n(Mucho texto)");
+			sprintf(label, "GNU General Public License v3.0 (click to view)");
+			if (ImGui::Selectable(label, true))
+				RequestBrowser("https://github.com/FranGV98/Isolate_Engine/blob/master/LICENSE");
 
 			ImGui::End();
 		}

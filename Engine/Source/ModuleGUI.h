@@ -62,6 +62,7 @@ public:
 	int current_resolution = 3;
 
 	std::vector<char*> logs;
+	std::vector<char*> input_logs;
 	bool update_scroll;
 	
 	GameObject* selected_gameobject = nullptr;

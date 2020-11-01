@@ -129,7 +129,11 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 		{
-			LookAt(vec3(0, 0, 0));
+			if (App->GUI->selected_gameobject != nullptr)
+			{
+				LookAt(target_position);
+			}
+
 			int dx = -App->input->GetMouseXMotion();
 			int dy = -App->input->GetMouseYMotion();
 
@@ -171,8 +175,8 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		if (App->GUI->selected_gameobject != nullptr)
 		{
-			//LookAt(App->GUI->selected_gameobject->transform.GetPosition());
-			LookAt(vec3(0,0,0));
+			LookAt(target_position);
+			//LookAt(vec3(0,0,0));
 		}
 		else
 		{

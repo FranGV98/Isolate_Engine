@@ -31,6 +31,12 @@ void ComponentTransform::SetScale(float3 scale)
 	this->scale = scale;
 	UpdateTransform();
 }
+
+void ComponentTransform::SetRotation(Quat rotation)
+{
+	this->rotation = rotation;
+	UpdateTransform();
+}
 //Recalculates de transform matrix
 void ComponentTransform::UpdateTransform()
 {
