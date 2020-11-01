@@ -319,13 +319,13 @@ update_status ModuleGUI::PostUpdate(float dt)
 		if (selected_gameobject != nullptr)
 		{
 			bool active_go = selected_gameobject->isActive();
-			if (ImGui::Checkbox(selected_gameobject->GetName(), &active_go))
+			if (ImGui::Checkbox(" ", &active_go))
 			{
 				selected_gameobject->SetActive(active_go);
 			}
 			
 			ImGui::SameLine();
-			char name_buff[32];
+			static char name_buff[32];
 			strcpy(name_buff, selected_gameobject->GetName());
 			if (ImGui::InputText("name", name_buff, IM_ARRAYSIZE(name_buff), ImGuiInputTextFlags_EnterReturnsTrue))
 			{
@@ -506,12 +506,16 @@ bool ModuleGUI::SetDocking(ImGuiWindowFlags window_flags)
 
 void ModuleGUI::ObtainGameObjects(GameObject* go)
 {
-	//Grey when deactivated
+	//Defines color (grey inactive / pink selected)
 	ImVec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	if (!go->isActive())														// If the given game object is not active, the text of the tree node will be displayed in GREY.
 	{
 		color = { 0.5f, 0.5f, 0.5f, 1.0f }; //Grey
+	}
+	if (go == selected_gameobject && go->isActive())
+	{
+		color = { 1.0f, 0.0f, 1.0f, 1.0f }; //Pink
 	}
 
 	ImGui::PushStyleColor(ImGuiCol_Text, color);
