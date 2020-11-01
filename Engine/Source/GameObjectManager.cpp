@@ -12,13 +12,13 @@ GameObjectManager::~GameObjectManager()
 bool GameObjectManager::Start()
 {
 	//Create objects here, define parent nodes as GameObjects* so we can reference them on the childs
-	GameObject* garden = CreateGameObject("Garden", nullptr);
-	CreateGameObject("Potato", garden);
-	CreateGameObject("Tomato", garden);
-	GameObject* flock = CreateGameObject("flock", garden);
+	GameObject* garden = CreateGameObject("Node Tree Test", nullptr);
+	CreateGameObject("Node", garden);
+	CreateGameObject("Node", garden);
+	GameObject* flock = CreateGameObject("Group Node", garden);
 	for (int b = 0; b < 5; b++)
 	{
-		CreateGameObject("Bird", flock);
+		CreateGameObject("Node", flock);
 	}
 
 	GameObject* House = CreateGameObject("House", nullptr);

@@ -15,6 +15,10 @@ Camera Control:
 - Use the wheel to zoom in or zoom out.
 - SHIFT duplicates movement speed
 
-Some tips:
+Comments to the teacher:
 - If you want to select any GameObject from the hierarchy window, in case this GameObject has any children, you have to unfold the parent first and then you can select the object to view its propierties on the inspector.
+
+- We weren't able to make the TextureComponent work in time, therefore we took it out of the release and manually Loaded the Baker House texture so you can see it can display them
+
+- We are aware that the project structure it's a bit messy, we'll try to massively improve that for the next delivery
 

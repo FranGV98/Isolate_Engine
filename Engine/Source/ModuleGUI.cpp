@@ -264,6 +264,38 @@ update_status ModuleGUI::PostUpdate(float dt)
 				ImGui::Text("RAM: ");
 				ImGui::SameLine();
 				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d Mb", SDL_GetSystemRAM());
+				
+				ImGui::Text("Brand: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%s", glGetString(GL_VENDOR));
+
+				ImGui::Text("Model: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%s", glGetString(GL_RENDERER));
+
+				int budget;
+				glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &budget);
+				ImGui::Text("VRAM Budget: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d Mb", budget / 1024);
+
+				int usage;
+				glGetIntegerv(GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, &usage);
+				ImGui::Text("VRAM Usage: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d Mb", usage / 1024);
+
+				int available;
+				glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &available);
+				ImGui::Text("VRAM Avaliable: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d Mb", available / 1024);
+
+				int reserved;
+				glGetIntegerv(GL_GPU_MEMORY_INFO_EVICTED_MEMORY_NVX, &reserved);
+				ImGui::Text("VRAM Reserved: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "%d Mb", reserved / 1024);
 
 				ImGui::Text("SDL version: ");
 				ImGui::SameLine();
@@ -325,10 +357,10 @@ update_status ModuleGUI::PostUpdate(float dt)
 		ImGui::Begin("Inspector", &show_inspector_window);
 		if (selected_gameobject != nullptr)
 		{
-			//Focus target
-			App->camera->target_position.x = selected_gameobject->transform->GetPosition().x;
-			App->camera->target_position.y = selected_gameobject->transform->GetPosition().y;
-			App->camera->target_position.z = selected_gameobject->transform->GetPosition().z;
+			/*Focus target*/ 
+			App->camera->target_position = vec3(selected_gameobject->transform->GetPosition().x,
+				selected_gameobject->transform->GetPosition().y,
+				selected_gameobject->transform->GetPosition().z);
 
 			//set object active
 			bool active_go = selected_gameobject->isActive();
@@ -368,19 +400,45 @@ update_status ModuleGUI::PostUpdate(float dt)
 					selected_gameobject->transform->SetScale(float3(f_scale[0], f_scale[1], f_scale[2]));
 				}
 			}
+			if (ImGui::CollapsingHeader("Mesh"))
+			{
+				ImGui::Text("Path mesh:");
+				//ImGui::TextColored(ImVec4(0, 1, 0, 1), "%s", );
+			}
+			if (ImGui::CollapsingHeader("Texture"))
+			{
+				ImGui::Text("Path Texture:");
+				//ImGui::TextColored(ImVec4(0, 1, 0, 1), "%s", );
+			}
 		}
 		if (ImGui::CollapsingHeader("Create Objects"))
 		{
 			ImGui::Text("GEOMETRY");
 			ImGui::Separator();
 
-			if (ImGui::Button("Sphere")) App->gobjects_manager->CreateGameObject("Sphere", selected_gameobject);
+			if (ImGui::Button("Sphere"))
+			{
+				App->gobjects_manager->CreateGameObject("Sphere", selected_gameobject);
+				App->renderer3D->ImportMesh("assets/3D/Sphere.FBX");
+			}
 			ImGui::SameLine();
-			if (ImGui::Button("Box")) App->gobjects_manager->CreateGameObject("Box", selected_gameobject);
+			if (ImGui::Button("Box"))
+			{
+				App->gobjects_manager->CreateGameObject("Box", selected_gameobject);
+				App->renderer3D->ImportMesh("assets/3D/Box.FBX");
+			}
 			ImGui::SameLine();
-			if (ImGui::Button("Cone")) App->gobjects_manager->CreateGameObject("Cone", selected_gameobject);
+			if (ImGui::Button("Cone"))
+			{
+				App->gobjects_manager->CreateGameObject("Cone", selected_gameobject);
+				App->renderer3D->ImportMesh("assets/3D/Cone.FBX");
+			}
 			ImGui::SameLine();
-			if (ImGui::Button("Cylinder")) App->gobjects_manager->CreateGameObject("Cylinder", selected_gameobject);
+			if (ImGui::Button("Cylinder"))
+			{
+				App->gobjects_manager->CreateGameObject("Cylinder", selected_gameobject);
+				App->renderer3D->ImportMesh("assets/3D/Cylinder.FBX");
+			}
 
 			ImGui::Separator();
 		}
