@@ -126,3 +126,8 @@ bool GameObject::HasComponent(ComponentClass type)
 	}
 	return false;
 }
+
+void GameObject::SetName(char* new_name)
+{
+	name = new_name;
+}

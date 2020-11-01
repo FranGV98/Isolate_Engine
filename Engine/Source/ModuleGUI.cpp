@@ -307,6 +307,17 @@ update_status ModuleGUI::PostUpdate(float dt)
 			ObtainGameObjects(*item);
 		}
 
+		/*ImGui::Separator();
+
+		for (std::vector<GameObject*>::iterator item = App->gobjects_manager->game_objects.begin(); item != App->gobjects_manager->game_objects.end(); item++)
+		{
+			GameObject* current_go = *item;
+			if (ImGui::Button(current_go->GetName()))
+			{
+				selected_gameobject = current_go;
+			}
+		}*/
+
 		ImGui::End();
 	}	
 	
@@ -317,12 +328,10 @@ update_status ModuleGUI::PostUpdate(float dt)
 		if (selected_gameobject != nullptr)
 		{
 			bool active_go = selected_gameobject->isActive();
-			ImGui::Checkbox(" ", &active_go);
+			ImGui::Checkbox(selected_gameobject->GetName(), &active_go);
 			selected_gameobject->SetActive(active_go);
-			ImGui::SameLine();
-			char go_name[25];
-			//ImGui::Text(selected_gameobject->GetName());
-			ImGui::InputText(" ", (char*)selected_gameobject->GetName(), IM_ARRAYSIZE(go_name));
+
+			//ImGui::InputText(" ", (char*)selected_gameobject->name.c_str(), 25, ImGuiInputTextFlags_EnterReturnsTrue);
 			ImGui::Spacing();
 			if (ImGui::CollapsingHeader("Transform"))
 			{   

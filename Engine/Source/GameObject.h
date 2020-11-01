@@ -17,7 +17,8 @@ public:
 	bool CleanUp();
 
 	const char* GetName() const { return name.c_str(); }
-	const bool isActive() const { return active; }
+	void SetName(char* new_name);
+	bool isActive() const { return active; }
 	void SetActive(bool toggle_active);
 
 	//Used for the hierarchy tree
