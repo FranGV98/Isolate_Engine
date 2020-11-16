@@ -642,8 +642,16 @@ void ModuleGUI::ObtainGameObjects(GameObject* go)
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_NODE"))
 			{
-				go->InsertChild(dragged_object);								
-				dragged_object = nullptr;
+				if (go->parent != dragged_object)
+				{
+					go->InsertChild(dragged_object);
+					dragged_object = nullptr;
+				}
+				else
+				{
+					LOG("Can't make child of its own child");
+				}
+				
 			}
 
 			ImGui::EndDragDropTarget();
