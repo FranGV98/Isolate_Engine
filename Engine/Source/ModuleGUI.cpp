@@ -476,7 +476,7 @@ update_status ModuleGUI::PostUpdate(float dt)
 			ImGui::Separator();
 			sprintf(label, "GNU General Public License v3.0 (click to view)");
 			if (ImGui::Selectable(label, true))
-				RequestBrowser("https://github.com/FranGV98/Isolate_Engine/blob/master/LICENSE");
+				RequestBrowser("https://github.com/FranGV98/Isolate_Engine/blob/master/LICENSE.md");
 
 			ImGui::End();
 		}
