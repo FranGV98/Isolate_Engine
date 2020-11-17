@@ -132,10 +132,10 @@ bool ModuleRenderer3D::Start()
 	ilutRenderer(ILUT_OPENGL);
 
 	//CreateCheckerTexture(); //not working
-	ImportMesh("assets/3D/BakerHouse.FBX");
+	ImportMesh("Assets/models/BakerHouse.FBX");
 
 	//Textures provisional
-	TextureData* tmp = Importer::LoadTexture("assets/3D/Baker_house.png");
+	TextureData* tmp = Importer::LoadTexture("Assets/models/Baker_house.png");
 	houseID = tmp->ID;
 
 

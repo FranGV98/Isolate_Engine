@@ -419,25 +419,25 @@ update_status ModuleGUI::PostUpdate(float dt)
 			if (ImGui::Button("Sphere"))
 			{
 				App->gobjects_manager->CreateGameObject("Sphere", selected_gameobject);
-				App->renderer3D->ImportMesh("assets/3D/Sphere.FBX");
+				App->renderer3D->ImportMesh("Assets/models/Sphere.FBX");
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Box"))
 			{
 				App->gobjects_manager->CreateGameObject("Box", selected_gameobject);
-				App->renderer3D->ImportMesh("assets/3D/Box.FBX");
+				App->renderer3D->ImportMesh("Assets/models/Box.FBX");
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cone"))
 			{
 				App->gobjects_manager->CreateGameObject("Cone", selected_gameobject);
-				App->renderer3D->ImportMesh("assets/3D/Cone.FBX");
+				App->renderer3D->ImportMesh("Assets/models/Cone.FBX");
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cylinder"))
 			{
 				App->gobjects_manager->CreateGameObject("Cylinder", selected_gameobject);
-				App->renderer3D->ImportMesh("assets/3D/Cylinder.FBX");
+				App->renderer3D->ImportMesh("Assets/models/Cylinder.FBX");
 			}
 
 			ImGui::Separator();
