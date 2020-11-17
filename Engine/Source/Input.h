@@ -12,12 +12,12 @@ enum KEY_STATE
 	KEY_UP
 };
 
-class ModuleInput : public Module
+class Input : public Module
 {
 public:
 	
-	ModuleInput(bool start_enabled = true);
-	~ModuleInput();
+	Input(bool start_enabled = true);
+	~Input();
 
 	bool Init();
 	update_status PreUpdate(float dt) override;

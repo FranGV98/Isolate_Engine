@@ -69,18 +69,6 @@
     <ClInclude Include="Module.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleCamera3D.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleInput.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleRenderer3D.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleWindow.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="glmath.h">
       <Filter>Dependencies\ImGui\Containers</Filter>
     </ClInclude>
@@ -95,9 +83,6 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Source\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleSceneIntro.h">
-      <Filter>Source\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Source\Core</Filter>
@@ -125,9 +110,6 @@
     </ClInclude>
     <ClInclude Include="imgui\imgui_impl_sdl.h">
       <Filter>Dependencies\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleGUI.h">
-      <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="glew\include\eglew.h">
       <Filter>Dependencies\glew</Filter>
@@ -360,20 +342,26 @@
     <ClInclude Include="Win_Inspector.h">
       <Filter>Source\Editor\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera3D.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer3D.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ModuleCamera3D.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleInput.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleRenderer3D.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleWindow.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source\Tools</Filter>
     </ClCompile>
@@ -388,9 +376,6 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Source\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleSceneIntro.cpp">
-      <Filter>Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Source\Core</Filter>
@@ -415,9 +400,6 @@
     </ClCompile>
     <ClCompile Include="imgui\imgui_impl_sdl.cpp">
       <Filter>Dependencies\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleGUI.cpp">
-      <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\src\Algorithm\Random\LCG.cpp">
       <Filter>Dependencies\ImGui\MathGeoLib\Algorithm\Random</Filter>
@@ -547,6 +529,24 @@
     </ClCompile>
     <ClCompile Include="Win_Inspector.cpp">
       <Filter>Source\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera3D.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer3D.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

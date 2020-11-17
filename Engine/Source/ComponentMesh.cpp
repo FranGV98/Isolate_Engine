@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "ModuleRenderer3D.h"
+#include "Renderer3D.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentMesh.h"

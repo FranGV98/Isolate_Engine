@@ -3,12 +3,12 @@
 #include "Globals.h"
 #include "Timer.h"
 #include "Module.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleSceneIntro.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
-#include "ModuleGUI.h"
+#include "Window.h"
+#include "Input.h"
+#include "Scene.h"
+#include "Renderer3D.h"
+#include "Camera3D.h"
+#include "GUI.h"
 #include "FileSystem.h"
 #include "GameObjectManager.h"
 
@@ -18,12 +18,12 @@
 class Application
 {
 public:
-	ModuleWindow*			window = nullptr;
-	ModuleInput*			input = nullptr;
-	ModuleSceneIntro*		scene_intro = nullptr;
-	ModuleRenderer3D*		renderer3D = nullptr;
-	ModuleCamera3D*			camera = nullptr;
-	ModuleGUI*				GUI = nullptr;
+	Window*			window = nullptr;
+	Input*			input = nullptr;
+	Scene*		scene = nullptr;
+	Renderer3D*		renderer3D = nullptr;
+	Camera3D*			camera = nullptr;
+	GUI*					gui = nullptr;
 	FileSystem*				file_system = nullptr;
 	GameObjectManager*		gobjects_manager = nullptr;
 

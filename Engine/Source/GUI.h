@@ -7,11 +7,11 @@
 #include "imgui/imgui.h"
 #include "Gameobject.h"
 
-class ModuleGUI : public Module
+class GUI : public Module
 {
 public:
-	ModuleGUI(bool start_enabled = true);
-	~ModuleGUI();
+	GUI(bool start_enabled = true);
+	~GUI();
 
 	bool Init();
 	update_status PreUpdate(float dt);

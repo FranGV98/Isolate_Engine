@@ -1,20 +1,20 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleSceneIntro.h"
+#include "Scene.h"
 #include "Primitive.h"
 
-ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
+Scene::Scene(bool start_enabled) : Module(start_enabled)
 {
 
 }
 
-ModuleSceneIntro::~ModuleSceneIntro()
+Scene::~Scene()
 {
 
 }
 
 // Load Assets
-bool ModuleSceneIntro::Start()
+bool Scene::Start()
 {
 	LOG("Loading Intro Assets");
 	bool ret = true;
@@ -75,21 +75,21 @@ bool ModuleSceneIntro::Start()
 }
 
 // Load Assets
-bool ModuleSceneIntro::CleanUp()
+bool Scene::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
 	return true;
 }
 
-void ModuleSceneIntro::HandleDebugInput()
+void Scene::HandleDebugInput()
 {
 	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
 	{
-		if (App->GUI->wireframe == true)
-			App->GUI->wireframe = false;
+		if (App->gui->wireframe == true)
+			App->gui->wireframe = false;
 		else 
-			App->GUI->wireframe = true;
+			App->gui->wireframe = true;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
@@ -130,14 +130,14 @@ void ModuleSceneIntro::HandleDebugInput()
 	}
 }
 
-void ModuleSceneIntro::DebugSpawnPrimitive(Primitive * p)
+void Scene::DebugSpawnPrimitive(Primitive * p)
 {
 	primitives.push_back(p);
 	p->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 }
 
 // Update
-update_status ModuleSceneIntro::Update(float dt)
+update_status Scene::Update(float dt)
 {
 	Plane p(vec3(0, 1, 0));
 	p.axis = true;
@@ -152,7 +152,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleSceneIntro::PostUpdate(float dt)
+update_status Scene::PostUpdate(float dt)
 {
 	for (uint n = 0; n < primitives.size(); n++)
 	{

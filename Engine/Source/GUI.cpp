@@ -11,14 +11,14 @@
 
 #pragma comment (lib, "glew/libx86/glew32.lib")
 
-ModuleGUI::ModuleGUI(bool start_enabled) : Module(start_enabled)
+GUI::GUI(bool start_enabled) : Module(start_enabled)
 {
 
 }
-ModuleGUI::~ModuleGUI()
+GUI::~GUI()
 {}
 
-bool ModuleGUI::Init()
+bool GUI::Init()
 {
 	LOG("Creating GUI");
 	bool ret = true;
@@ -67,7 +67,7 @@ bool ModuleGUI::Init()
 	return ret;
 };
 
-update_status ModuleGUI::PreUpdate(float dt)
+update_status GUI::PreUpdate(float dt)
 {
 	ShortKeys();
 
@@ -89,7 +89,7 @@ update_status ModuleGUI::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleGUI::PostUpdate(float dt)
+update_status GUI::PostUpdate(float dt)
 {
 	SetDocking(ImGuiWindowFlags_MenuBar);	
 
@@ -499,7 +499,7 @@ update_status ModuleGUI::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleGUI::CleanUp()
+bool GUI::CleanUp()
 {
 	ClearConsole();
 	ImGui_ImplOpenGL3_Shutdown();
@@ -510,19 +510,19 @@ bool ModuleGUI::CleanUp()
 }
 
 //Browser function
-void ModuleGUI::RequestBrowser(const char* path)
+void GUI::RequestBrowser(const char* path)
 {
 	ShellExecuteA(0, "Open", path, 0, "", 5);
 
 }
 
-void ModuleGUI::ConsoleLog(char* log)
+void GUI::ConsoleLog(char* log)
 {
 	logs.push_back(strdup(log));
 	update_scroll = true;
 }
 
-void ModuleGUI::ClearConsole()
+void GUI::ClearConsole()
 {
 	for (int i = 0; i < logs.size(); ++i)					
 	{
@@ -532,7 +532,7 @@ void ModuleGUI::ClearConsole()
 	logs.clear();
 }
 
-void ModuleGUI::ShortKeys()
+void GUI::ShortKeys()
 {
 
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
@@ -547,7 +547,7 @@ void ModuleGUI::ShortKeys()
 	}
 }
 
-bool ModuleGUI::SetDocking(ImGuiWindowFlags window_flags)
+bool GUI::SetDocking(ImGuiWindowFlags window_flags)
 {
 	bool p_open = true;
 
@@ -589,7 +589,7 @@ bool ModuleGUI::SetDocking(ImGuiWindowFlags window_flags)
 	return p_open;
 }
 
-void ModuleGUI::ObtainGameObjects(GameObject* go)
+void GUI::ObtainGameObjects(GameObject* go)
 {
 	//Defines color (grey inactive / pink selected)
 	ImVec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -662,7 +662,7 @@ void ModuleGUI::ObtainGameObjects(GameObject* go)
 	ImGui::PopStyleColor();
 }
 
-void ModuleGUI::SelectGameObject(GameObject* selected_object)
+void GUI::SelectGameObject(GameObject* selected_object)
 {
 	if (selected_object != selected_gameobject)
 	{

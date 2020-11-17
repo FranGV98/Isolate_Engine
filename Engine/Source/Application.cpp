@@ -6,12 +6,12 @@
 
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
-	window				= new ModuleWindow();
-	input				= new ModuleInput();
-	scene_intro			= new ModuleSceneIntro();
-	renderer3D			= new ModuleRenderer3D();
-	camera				= new ModuleCamera3D();
-	GUI					= new ModuleGUI();
+	window				= new Window();
+	input				= new Input();
+	scene			= new Scene();
+	renderer3D			= new Renderer3D();
+	camera				= new Camera3D();
+	gui					= new GUI();
 	file_system			= new FileSystem();
 	gobjects_manager	= new GameObjectManager();
 
@@ -24,11 +24,11 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(GUI);
+	AddModule(gui);
 	AddModule(gobjects_manager);
 
 	// Scenes
-	AddModule(scene_intro);
+	AddModule(scene);
 
 	// Renderer last!
 	AddModule(renderer3D);

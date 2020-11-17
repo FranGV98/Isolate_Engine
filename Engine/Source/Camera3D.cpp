@@ -1,9 +1,10 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleCamera3D.h"
+#include "Camera3D.h"
 #include "Component.h"
 #include "ComponentTransform.h"
-ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
+
+Camera3D::Camera3D(bool start_enabled) : Module(start_enabled)
 {
 	CalculateViewMatrix();
 
@@ -18,11 +19,11 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 	cameraRotateSpeed = 60.f;
 }
 
-ModuleCamera3D::~ModuleCamera3D()
+Camera3D::~Camera3D()
 {}
 
 // -----------------------------------------------------------------
-bool ModuleCamera3D::Start()
+bool Camera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
@@ -31,7 +32,7 @@ bool ModuleCamera3D::Start()
 }
 
 // -----------------------------------------------------------------
-bool ModuleCamera3D::CleanUp()
+bool Camera3D::CleanUp()
 {
 	LOG("Cleaning camera");
 
@@ -39,7 +40,7 @@ bool ModuleCamera3D::CleanUp()
 }
 
 // -----------------------------------------------------------------
-update_status ModuleCamera3D::Update(float dt)
+update_status Camera3D::Update(float dt)
 {
 	vec3 newPos(0, 0, 0);
 	float speed = cameraMoveSpeed * dt;
@@ -71,7 +72,7 @@ update_status ModuleCamera3D::Update(float dt)
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Look(const vec3& Position, const vec3& Reference, bool RotateAroundReference)
+void Camera3D::Look(const vec3& Position, const vec3& Reference, bool RotateAroundReference)
 {
 	this->Position = Position;
 	this->Reference = Reference;
@@ -88,7 +89,7 @@ void ModuleCamera3D::Look(const vec3& Position, const vec3& Reference, bool Rota
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::LookAt(const vec3& Spot)
+void Camera3D::LookAt(const vec3& Spot)
 {
 	Reference = Spot;
 
@@ -99,13 +100,13 @@ void ModuleCamera3D::LookAt(const vec3& Spot)
 
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Move(const vec3& Movement)
+void Camera3D::Move(const vec3& Movement)
 {
 	Position += Movement;
 	Reference += Movement;
 }
 
-void ModuleCamera3D::ZoomIn(float dt)
+void Camera3D::ZoomIn(float dt)
 {
 	int scrollWheel = App->input->GetMouseZ(); // -1 if moving towards me 1 if moving backwards
 	float speed = cameraRotateSpeed * dt;
@@ -120,7 +121,7 @@ void ModuleCamera3D::ZoomIn(float dt)
 	}
 }
 
-void ModuleCamera3D::RotateCameraStatic()
+void Camera3D::RotateCameraStatic()
 {
 	int dx = -App->input->GetMouseXMotion();
 	int dy = -App->input->GetMouseYMotion();
@@ -152,32 +153,32 @@ void ModuleCamera3D::RotateCameraStatic()
 
 }
 
-void ModuleCamera3D::FocusOnObject()
+void Camera3D::FocusOnObject()
 {
-	if (App->GUI->selected_gameobject != nullptr)
+	if (App->gui->selected_gameobject != nullptr)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 		{
-			Reference.x = App->GUI->selected_gameobject->transform->GetPosition().x;
-			Reference.y = App->GUI->selected_gameobject->transform->GetPosition().y;
-			Reference.z = App->GUI->selected_gameobject->transform->GetPosition().z;
+			Reference.x = App->gui->selected_gameobject->transform->GetPosition().x;
+			Reference.y = App->gui->selected_gameobject->transform->GetPosition().y;
+			Reference.z = App->gui->selected_gameobject->transform->GetPosition().z;
 			Position = Reference + Z * 10;
 		}
 	}
 }
 
-void ModuleCamera3D::OrbitObject()
+void Camera3D::OrbitObject()
 {
 	int dx = -App->input->GetMouseXMotion();
 	int dy = -App->input->GetMouseYMotion();
 
 	float Sensitivity = 0.15f;
 
-	if (App->GUI->selected_gameobject != nullptr)
+	if (App->gui->selected_gameobject != nullptr)
 	{
-		Reference.x = App->GUI->selected_gameobject->transform->GetPosition().x;
-		Reference.y = App->GUI->selected_gameobject->transform->GetPosition().y;
-		Reference.z = App->GUI->selected_gameobject->transform->GetPosition().z;
+		Reference.x = App->gui->selected_gameobject->transform->GetPosition().x;
+		Reference.y = App->gui->selected_gameobject->transform->GetPosition().y;
+		Reference.z = App->gui->selected_gameobject->transform->GetPosition().z;
 	}
 
 	Position -= Reference;
@@ -210,20 +211,20 @@ void ModuleCamera3D::OrbitObject()
 }
 
 // -----------------------------------------------------------------
-float* ModuleCamera3D::GetRawViewMatrix()
+float* Camera3D::GetRawViewMatrix()
 {
 	CalculateViewMatrix();
 	return &ViewMatrix;
 }
 
-mat4x4 ModuleCamera3D::GetViewMatrix()
+mat4x4 Camera3D::GetViewMatrix()
 {
 	CalculateViewMatrix();
 	return ViewMatrix;
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::CalculateViewMatrix()
+void Camera3D::CalculateViewMatrix()
 {
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
 	ViewMatrixInverse = inverse(ViewMatrix);

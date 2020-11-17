@@ -1,20 +1,20 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleWindow.h"
+#include "Window.h"
 
-ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
+Window::Window(bool start_enabled) : Module(start_enabled)
 {
 	window = NULL;
 	screen_surface = NULL;
 }
 
 // Destructor
-ModuleWindow::~ModuleWindow()
+Window::~Window()
 {
 }
 
 // Called before render is available
-bool ModuleWindow::Init()
+bool Window::Init()
 {
 	LOG("Init SDL window & surface");
 	bool ret = true;
@@ -73,7 +73,7 @@ bool ModuleWindow::Init()
 }
 
 // Called before quitting
-bool ModuleWindow::CleanUp()
+bool Window::CleanUp()
 {
 	LOG("Destroying SDL window and quitting all SDL systems");
 
@@ -88,21 +88,21 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
-int ModuleWindow::Width() const
+int Window::Width() const
 {
 	int w, h;
 	SDL_GetWindowSize(window, &w, &h);
 	return w;
 }
 
-int ModuleWindow::Height() const
+int Window::Height() const
 {
 	int w, h;
 	SDL_GetWindowSize(window, &w, &h);
 	return h;
 }
 
-void ModuleWindow::SetTitle(const char* title)
+void Window::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
 }

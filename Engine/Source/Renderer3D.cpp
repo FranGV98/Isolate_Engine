@@ -18,16 +18,16 @@
 #pragma comment (lib, "glew/libx86/glew32.lib")
 
 
-ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled), context()
+Renderer3D::Renderer3D(bool start_enabled) : Module(start_enabled), context()
 {
 }
 
 // Destructor
-ModuleRenderer3D::~ModuleRenderer3D()
+Renderer3D::~Renderer3D()
 {}
 
 // Called before render is available
-bool ModuleRenderer3D::Init()
+bool Renderer3D::Init()
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
@@ -121,7 +121,7 @@ bool ModuleRenderer3D::Init()
 	return ret;
 }
 
-bool ModuleRenderer3D::Start()
+bool Renderer3D::Start()
 {
 	Importer::Init();
 
@@ -144,7 +144,7 @@ bool ModuleRenderer3D::Start()
 
 
 // PreUpdate: clear buffer
-update_status ModuleRenderer3D::PreUpdate(float dt)
+update_status Renderer3D::PreUpdate(float dt)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -161,27 +161,27 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 
 	//RENDER OPTIONS
-	if (App->GUI->wireframe == true)
+	if (App->gui->wireframe == true)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	if (App->GUI->gl_cull_face == true)
+	if (App->gui->gl_cull_face == true)
 		glEnable(GL_CULL_FACE);
 	else
 		glDisable(GL_CULL_FACE);
 
-	if (App->GUI->gl_depth == true)
+	if (App->gui->gl_depth == true)
 		glEnable(GL_DEPTH);
 	else
 		glDisable(GL_DEPTH);
 	
-	if (App->GUI->gl_light == true)
+	if (App->gui->gl_light == true)
 		glEnable(GL_LIGHTING);
 	else
 		glDisable(GL_LIGHTING);
 
-	if (App->GUI->gl_color_mat == true)
+	if (App->gui->gl_color_mat == true)
 		glEnable(GL_COLOR_MATERIAL);
 	else
 		glDisable(GL_COLOR_MATERIAL);
@@ -194,7 +194,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	{
 		DrawMesh((*item));
 
-		if(App->GUI->draw_normals_dir)
+		if(App->gui->draw_normals_dir)
 			DrawNormalDir((*item));
 	}
 
@@ -204,7 +204,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 }
 
 // PostUpdate present buffer to screen
-update_status ModuleRenderer3D::PostUpdate(float dt)
+update_status Renderer3D::PostUpdate(float dt)
 {
 
 	DropMesh();
@@ -213,7 +213,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 }
 
 // Called before quitting
-bool ModuleRenderer3D::CleanUp()
+bool Renderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
 
@@ -224,7 +224,7 @@ bool ModuleRenderer3D::CleanUp()
 }
 
 
-void ModuleRenderer3D::OnResize(int width, int height)
+void Renderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
 
@@ -237,7 +237,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::ImportMesh(char* file_path)
+void Renderer3D::ImportMesh(char* file_path)
 {
 	Importer::LoadMesh(file_path, mesh_container);
 	std::vector<MeshData*>::iterator item = mesh_container.begin();
@@ -250,7 +250,7 @@ void ModuleRenderer3D::ImportMesh(char* file_path)
 
 //Mesh
 
-void ModuleRenderer3D::MeshBuffer(MeshData* currentmesh)
+void Renderer3D::MeshBuffer(MeshData* currentmesh)
 {
 	glGenBuffers(1, (GLuint*)& currentmesh->buffersId[MeshData::vertex]);
 	glBindBuffer(GL_ARRAY_BUFFER, currentmesh->buffersId[MeshData::vertex]);
@@ -274,7 +274,7 @@ void ModuleRenderer3D::MeshBuffer(MeshData* currentmesh)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentmesh->buffersLength[MeshData::texture] * 2, currentmesh->texture_coord, GL_STATIC_DRAW);
 	}
 }
-void ModuleRenderer3D::DrawNormalDir(MeshData* currentmesh)
+void Renderer3D::DrawNormalDir(MeshData* currentmesh)
 {
 	glBegin(GL_LINES);
 	glColor3f(1.0f, 0.0f, 0.0f);
@@ -286,7 +286,7 @@ void ModuleRenderer3D::DrawNormalDir(MeshData* currentmesh)
 		}
 	glEnd();
 }
-void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
+void Renderer3D::DrawMesh(MeshData* mymesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
@@ -314,7 +314,7 @@ void ModuleRenderer3D::DrawMesh(MeshData* mymesh)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void ModuleRenderer3D::DropMesh()
+void Renderer3D::DropMesh()
 {
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
@@ -327,7 +327,7 @@ void ModuleRenderer3D::DropMesh()
 		}
 	}
 }
-void ModuleRenderer3D::CreateCheckerTexture()
+void Renderer3D::CreateCheckerTexture()
 {
 
 	GLubyte checkerImage[64][64][4];
@@ -354,7 +354,7 @@ void ModuleRenderer3D::CreateCheckerTexture()
 }
 
 //SHAPES
-void ModuleRenderer3D::CreateDirectCube()
+void Renderer3D::CreateDirectCube()
 {
 	uint my_indices = 0;
 	glGenBuffers(1, (GLuint*) & (my_indices));
