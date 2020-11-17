@@ -1,7 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleCamera3D.h"
-
+#include "Component.h"
+#include "ComponentTransform.h"
 ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 {
 	CalculateViewMatrix();
@@ -12,6 +13,9 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 
 	Position = vec3(0.0f, 0.0f, 5.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
+
+	cameraMoveSpeed = 7.5f;
+	cameraRotateSpeed = 60.f;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -37,159 +41,37 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	// Implement a debug camera with keys and mouse
-	// Now we can make this movememnt frame rate independant!
+	vec3 newPos(0, 0, 0);
+	float speed = cameraMoveSpeed * dt;
 
-	vec3 newPos(0,0,0);
-	float speed = 5.0f * dt;
-	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-		speed = 20.0f * dt;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+		speed = (cameraMoveSpeed * 2.f) * dt;
 
-	/*if(App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) 
-		newPos.y += speed;
-	if(App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT)
-		newPos.y -= speed;*/
-	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-		newPos -= Z * speed;
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) 
-		newPos += Z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
 
 
-	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
-		newPos -= X * speed;
-	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) 
-		newPos += X * speed;
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
 
+	FocusOnObject();
 
-	newPos -= Z * speed * App->input->GetMouseZ() * 20;
+	ZoomIn(dt);
 
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_IDLE)
+		RotateCameraStatic();
+
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
+		OrbitObject();
 
 	Position += newPos;
 	Reference += newPos;
-
-	// Mouse motion ----------------
-
-	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	{
-		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
-
-		float Sensitivity = 0.25f;
-
-		Position -= Reference;
-
-		if(dx != 0)
-		{
-			float DeltaX = (float)dx * Sensitivity;
-
-			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		}
-
-		if(dy != 0)
-		{
-			float DeltaY = (float)dy * Sensitivity;
-
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
-
-			if(Y.y < 0.0f)
-			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
-			}
-		}
-
-		Position = Reference + Z * length(Position);
-	}
-	
-	//CENTER MOUSE MOVEMENT
-	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
-	{
-		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
-
-		if (dx != 0)
-		{
-			newPos += X * dx * dt * 20 * speed;
-		}
-		if (dy != 0)
-		{
-			newPos -= Y * dy * dt * 20 * speed;
-		}
-
-		Position += newPos;
-		Reference += newPos;
-
-	}
-
-	// ORBIT 
-	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
-	{
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
-		{
-			if (App->GUI->selected_gameobject != nullptr)
-			{
-				LookAt(target_position);
-			}
-
-			int dx = -App->input->GetMouseXMotion();
-			int dy = -App->input->GetMouseYMotion();
-
-			float Sensitivity = 0.25f;
-
-			Position += newPos;
-			Reference += newPos;
-
-			Position -= Reference;
-
-			if (dx != 0)
-			{
-				float DeltaX = (float)dx * Sensitivity;
-
-				X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-				Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-				Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			}
-
-			if (dy != 0)
-			{
-				float DeltaY = (float)dy * Sensitivity;
-
-				Y = rotate(Y, DeltaY, X);
-				Z = rotate(Z, DeltaY, X);
-
-				if (Y.y < 0.0f)
-				{
-					Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-					Y = cross(Z, X);
-				}
-			}
-
-			Position = Reference + Z * length(Position);
-		}
-	}
-	//Focus
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-	{
-		if (App->GUI->selected_gameobject != nullptr)
-		{
-			LookAt(target_position);
-			//LookAt(vec3(0,0,0));
-		}
-		else
-		{
-			LOG("No game object selected");
-		}
-			
-	}
 
 	return UPDATE_CONTINUE;
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
+void ModuleCamera3D::Look(const vec3& Position, const vec3& Reference, bool RotateAroundReference)
 {
 	this->Position = Position;
 	this->Reference = Reference;
@@ -198,7 +80,7 @@ void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool Rota
 	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
 	Y = cross(Z, X);
 
-	if(!RotateAroundReference)
+	if (!RotateAroundReference)
 	{
 		this->Reference = this->Position;
 		this->Position += Z * 0.05f;
@@ -206,7 +88,7 @@ void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool Rota
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::LookAt( const vec3 &Spot)
+void ModuleCamera3D::LookAt(const vec3& Spot)
 {
 	Reference = Spot;
 
@@ -217,10 +99,114 @@ void ModuleCamera3D::LookAt( const vec3 &Spot)
 
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Move(const vec3 &Movement)
+void ModuleCamera3D::Move(const vec3& Movement)
 {
 	Position += Movement;
 	Reference += Movement;
+}
+
+void ModuleCamera3D::ZoomIn(float dt)
+{
+	int scrollWheel = App->input->GetMouseZ(); // -1 if moving towards me 1 if moving backwards
+	float speed = cameraRotateSpeed * dt;
+
+	if (scrollWheel > 0)
+	{
+		Position -= Z * speed;
+	}
+	if (scrollWheel < 0)
+	{
+		Position += Z * speed;
+	}
+}
+
+void ModuleCamera3D::RotateCameraStatic()
+{
+	int dx = -App->input->GetMouseXMotion();
+	int dy = -App->input->GetMouseYMotion();
+
+	float Sensitivity = 0.15f;
+
+	if (dx != 0)
+	{
+		float DeltaX = (float)dx * Sensitivity;
+
+		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	if (dy != 0)
+	{
+		float DeltaY = (float)dy * Sensitivity;
+
+		Y = rotate(Y, DeltaY, X);
+		Z = rotate(Z, DeltaY, X);
+
+		if (Y.y < 0.0f)
+		{
+			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+			Y = cross(Z, X);
+		}
+	}
+
+}
+
+void ModuleCamera3D::FocusOnObject()
+{
+	if (App->GUI->selected_gameobject != nullptr)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		{
+			Reference.x = App->GUI->selected_gameobject->transform->GetPosition().x;
+			Reference.y = App->GUI->selected_gameobject->transform->GetPosition().y;
+			Reference.z = App->GUI->selected_gameobject->transform->GetPosition().z;
+			Position = Reference + Z * 10;
+		}
+	}
+}
+
+void ModuleCamera3D::OrbitObject()
+{
+	int dx = -App->input->GetMouseXMotion();
+	int dy = -App->input->GetMouseYMotion();
+
+	float Sensitivity = 0.15f;
+
+	if (App->GUI->selected_gameobject != nullptr)
+	{
+		Reference.x = App->GUI->selected_gameobject->transform->GetPosition().x;
+		Reference.y = App->GUI->selected_gameobject->transform->GetPosition().y;
+		Reference.z = App->GUI->selected_gameobject->transform->GetPosition().z;
+	}
+
+	Position -= Reference;
+
+	if (dx != 0)
+	{
+		float DeltaX = (float)dx * Sensitivity;
+
+		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	if (dy != 0)
+	{
+		float DeltaY = (float)dy * Sensitivity;
+
+		Y = rotate(Y, DeltaY, X);
+		Z = rotate(Z, DeltaY, X);
+
+		if (Y.y < 0.0f)
+		{
+			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+			Y = cross(Z, X);
+		}
+	}
+
+	Position = Reference + Z * length(Position);
+
 }
 
 // -----------------------------------------------------------------

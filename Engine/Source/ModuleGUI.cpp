@@ -357,11 +357,6 @@ update_status ModuleGUI::PostUpdate(float dt)
 		ImGui::Begin("Inspector", &show_inspector_window);
 		if (selected_gameobject != nullptr)
 		{
-			/*Focus target*/ 
-			App->camera->target_position = vec3(selected_gameobject->transform->GetPosition().x,
-				selected_gameobject->transform->GetPosition().y,
-				selected_gameobject->transform->GetPosition().z);
-
 			//set object active
 			bool active_go = selected_gameobject->isActive();
 			if (ImGui::Checkbox(" ", &active_go))

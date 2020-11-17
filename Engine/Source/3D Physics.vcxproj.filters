@@ -58,6 +58,12 @@
     <Filter Include="Source\GameObjects\Components">
       <UniqueIdentifier>{13cd0d19-1013-4606-b3f0-7659d40712e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Editor">
+      <UniqueIdentifier>{e45f6a7b-5f3c-4f9d-bad5-cbdd9c8f77c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Windows">
+      <UniqueIdentifier>{b9cc4a32-3713-43da-926b-cfe2f2fc0575}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -312,9 +318,6 @@
     <ClInclude Include="imgui\imgui_impl_opengl3.h">
       <Filter>Dependencies\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Module3DImport.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="3DShapes.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
@@ -341,6 +344,21 @@
     </ClInclude>
     <ClInclude Include="GameObjectManager.h">
       <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Win_About.h">
+      <Filter>Source\Editor\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Win_Configuration.h">
+      <Filter>Source\Editor\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Win_Console.h">
+      <Filter>Source\Editor\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Win_Hierarchy.h">
+      <Filter>Source\Editor\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Win_Inspector.h">
+      <Filter>Source\Editor\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -494,9 +512,6 @@
     <ClCompile Include="imgui\imgui_impl_opengl3.cpp">
       <Filter>Dependencies\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Module3DImport.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="3DShapes.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
@@ -517,6 +532,21 @@
     </ClCompile>
     <ClCompile Include="GameObjectManager.cpp">
       <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Win_About.cpp">
+      <Filter>Source\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Win_Configuration.cpp">
+      <Filter>Source\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Win_Console.cpp">
+      <Filter>Source\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Win_Hierarchy.cpp">
+      <Filter>Source\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Win_Inspector.cpp">
+      <Filter>Source\Editor\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

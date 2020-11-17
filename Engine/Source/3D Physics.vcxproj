@@ -178,6 +178,11 @@
     <ClInclude Include="PhysFS\include\physfs.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Win_About.h" />
+    <ClInclude Include="Win_Configuration.h" />
+    <ClInclude Include="Win_Console.h" />
+    <ClInclude Include="Win_Hierarchy.h" />
+    <ClInclude Include="Win_Inspector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DShapes.cpp" />
@@ -237,6 +242,11 @@
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Win_About.cpp" />
+    <ClCompile Include="Win_Configuration.cpp" />
+    <ClCompile Include="Win_Console.cpp" />
+    <ClCompile Include="Win_Hierarchy.cpp" />
+    <ClCompile Include="Win_Inspector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\src\Geometry\KDTree.inl" />
